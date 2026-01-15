@@ -13,14 +13,10 @@
 
     body {
       font-family: 'Segoe UI', -apple-system, sans-serif;
-      /* ✅ BACKGROUND FURRY ANIMÉ */
       background: 
-        /* Dégradé principal */
         linear-gradient(135deg, #0c0c0c 0%, #1a0f2e 30%, #2a1b3d 60%, #1a0f2e 100%),
-        /* Texture subtile */
         radial-gradient(circle at 20% 80%, rgba(74,144,226,0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(255,107,157,0.1) 0%, transparent 50%),
-        /* Particules flottantes */
         radial-gradient(4px 4px at 30px 60px, #4a90e2, transparent),
         radial-gradient(3px 3px at 80px 120px, #ff6b9d, transparent),
         radial-gradient(2px 2px at 140px 80px, #00d4ff, transparent);
@@ -84,7 +80,6 @@
       align-items: end;
     }
 
-    /* FILE INPUT CORRIGÉ */
     .file-input-wrapper {
       position: relative;
       grid-column: 1;
@@ -130,7 +125,6 @@
       z-index: 2;
     }
 
-    /* INPUTS */
     input[type="text"], select, textarea {
       padding: 14px 18px;
       border: 2px solid rgba(74, 144, 226, 0.4);
@@ -155,7 +149,6 @@
       min-height: 90px;
     }
 
-    /* BOUTON AJOUTER */
     button {
       padding: 14px 24px;
       background: linear-gradient(135deg, rgba(74,144,226,0.25), rgba(255,107,157,0.25));
@@ -195,7 +188,12 @@
       left: 100%;
     }
 
-    /* TABS */
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
     .tabs {
       max-width: 900px;
       margin: 0 auto 20px;
@@ -235,7 +233,6 @@
       box-shadow: 0 12px 30px rgba(74,144,226,0.4);
     }
 
-    /* GALERIE */
     .gallery {
       max-width: 1400px;
       margin: 0 auto;
@@ -289,7 +286,7 @@
     }
 
     .desc {
-      padding: 25px 20px 50px 20px; /* ✅ ESPACE EN BAS pour la date */
+      padding: 25px 20px 50px 20px;
       text-align: center;
       font-size: 15px;
       font-weight: 500;
@@ -314,7 +311,6 @@
       white-space: nowrap;
     }
 
-    /* MODAL - SEULEMENT L'IMAGE */
     .modal {
       display: none;
       position: fixed;
@@ -369,7 +365,15 @@
       border: 2px solid rgba(74,144,226,0.5);
     }
 
-    /* RESPONSIVE */
+    .upload-progress {
+      grid-column: 1 / -1;
+      margin-top: 10px;
+      text-align: center;
+      color: #4a90e2;
+      font-weight: 500;
+      display: none;
+    }
+
     @media (max-width: 768px) {
       .upload-form { grid-template-columns: 1fr; gap: 15px; }
       .tabs { gap: 8px; padding: 15px; }
@@ -413,7 +417,8 @@
         <option value="stickers">🎨 Stickers</option>
       </select>
       <textarea id="imageDesc" placeholder="Description (optionnel)"></textarea>
-      <button onclick="addImage()">➕ Ajouter à la galerie</button>
+      <button id="addBtn" onclick="addImage()">➕ Ajouter à la galerie</button>
+      <div id="uploadProgress" class="upload-progress">⏳ Upload en cours...</div>
     </div>
   </section>
 
@@ -438,6 +443,35 @@
     let allImages = [];
     let currentModalIndex = 0;
     let currentFilter = 'all';
+    const STORAGE_KEY = 'furryPortfolio2026';
+
+    // ✅ CHARGEMENT AU DEMARRAGE
+    function loadImages() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          allImages = JSON.parse(saved);
+          console.log('✅ Images chargées:', allImages.length);
+        }
+      } catch(e) {
+        console.error('Erreur chargement:', e);
+      }
+      renderGallery();
+      filterGallery('all');
+    }
+
+    // ✅ SAUVEGARDE AUTOMATIQUE
+    function saveImages() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allImages));
+        console.log('💾 Sauvegardé:', allImages.length, 'images');
+      } catch(e) {
+        console.error('Erreur sauvegarde:', e);
+        alert('⚠️ Stockage plein ! Supprime quelques images.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadImages);
 
     document.getElementById('imageInput').addEventListener('change', function() {
       const label = document.getElementById('fileInputLabel');
@@ -450,11 +484,13 @@
       }
     });
 
-    function addImage() {
+    async function addImage() {
       const fileInput = document.getElementById('imageInput');
       const titleInput = document.getElementById('imageTitle');
       const categorySelect = document.getElementById('imageCategory');
       const descInput = document.getElementById('imageDesc');
+      const addBtn = document.getElementById('addBtn');
+      const progress = document.getElementById('uploadProgress');
 
       if (fileInput.files.length === 0) {
         alert('Veuillez sélectionner une image !');
@@ -462,8 +498,26 @@
       }
 
       const file = fileInput.files[0];
+      
+      // Vérif taille (10MB max)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('❌ Image trop lourde (max 10MB)');
+        return;
+      }
+
+      // UI Upload
+      addBtn.disabled = true;
+      progress.style.display = 'block';
+
       const reader = new FileReader();
       
+      reader.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          progress.textContent = `⏳ Upload ${percent}%...`;
+        }
+      };
+
       reader.onload = function(e) {
         const now = new Date();
         const dateString = now.toLocaleDateString('fr-FR', { 
@@ -479,22 +533,35 @@
           title: titleInput.value || 'Sans titre',
           category: categorySelect.value,
           description: descInput.value || '',
-          imageUrl: e.target.result,
-          dateAdded: dateString
+          imageUrl: e.target.result, // Base64 pour localStorage
+          dateAdded: dateString,
+          size: file.size // Pour debug
         };
 
         allImages.unshift(imageData);
+        saveImages(); // ✅ SAUVEGARDE
         renderGallery();
         filterGallery(currentFilter);
 
         // Reset form
-        fileInput.value = '';
-        titleInput.value = '';
-        descInput.value = '';
-        const label = document.getElementById('fileInputLabel');
-        label.textContent = '📁 Choisir une image';
-        label.classList.remove('has-file');
-        categorySelect.selectedIndex = 0;
+        setTimeout(() => {
+          fileInput.value = '';
+          titleInput.value = '';
+          descInput.value = '';
+          const label = document.getElementById('fileInputLabel');
+          label.textContent = '📁 Choisir une image';
+          label.classList.remove('has-file');
+          categorySelect.selectedIndex = 0;
+          addBtn.disabled = false;
+          progress.style.display = 'none';
+          progress.textContent = '⏳ Upload en cours...';
+        }, 1000);
+      };
+
+      reader.onerror = () => {
+        alert('❌ Erreur lecture image');
+        addBtn.disabled = false;
+        progress.style.display = 'none';
       };
 
       reader.readAsDataURL(file);
@@ -561,23 +628,17 @@
       document.getElementById('imageModal').style.display = 'none';
     }
 
-    // Close modal on outside click
     document.getElementById('imageModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeModal();
-      }
+      if (e.target === this) closeModal();
     });
 
-    // Close modal on Escape key
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeModal();
-      }
+      if (e.key === 'Escape') closeModal();
     });
 
-    // Initial render
-    renderGallery();
-    filterGallery('all');
+    // ✅ NETTOYAGE si localStorage trop plein
+    window.addEventListener('storage', () => loadImages());
+    window.addEventListener('beforeunload', saveImages);
   </script>
 </body>
 </html>
