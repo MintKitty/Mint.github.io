@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Portfolio Furry</title>
+  <title>Mon Portfolio Furry - Firebase</title>
   <style>
     * {
       box-sizing: border-box;
@@ -30,18 +30,11 @@
     }
 
     @keyframes bgFloat {
-      0%, 100% { 
-        background-position: 0% 50%, 0% 50%, 0% 50%, 0px 0px, 200px 0px, 0px 150px;
-      }
-      33% { 
-        background-position: 10% 60%, 10% 40%, 10% 60%, 100px 50px, 300px 100px, 100px 200px;
-      }
-      66% { 
-        background-position: 20% 40%, 20% 60%, 20% 40%, 200px 100px, 100px 200px, 200px 50px;
-      }
+      0%, 100% { background-position: 0% 50%, 0% 50%, 0% 50%, 0px 0px, 200px 0px, 0px 150px; }
+      33% { background-position: 10% 60%, 10% 40%, 10% 60%, 100px 50px, 300px 100px, 100px 200px; }
+      66% { background-position: 20% 40%, 20% 60%, 20% 40%, 200px 100px, 100px 200px, 200px 50px; }
     }
 
-    /* HEADER */
     header {
       text-align: center;
       padding: 40px 20px;
@@ -61,7 +54,6 @@
       margin-bottom: 10px;
     }
 
-    /* UPLOAD ZONE */
     .upload-zone {
       max-width: 900px;
       margin: 0 auto 30px;
@@ -80,15 +72,11 @@
       align-items: end;
     }
 
-    .file-input-wrapper {
-      position: relative;
-      grid-column: 1;
-    }
-
+    .file-input-wrapper { position: relative; grid-column: 1; }
     .file-input-custom {
       padding: 14px 20px;
       background: linear-gradient(135deg, rgba(74,144,226,0.25), rgba(255,107,157,0.25));
-      border: 2px solid rgba(74, 144, 226, 0.5);
+      border: 2px solid rgba(74,144,226,0.5);
       border-radius: 15px;
       color: #f0f0f0;
       font-size: 14px;
@@ -100,24 +88,20 @@
       position: relative;
       z-index: 1;
     }
-
     .file-input-custom:hover {
       background: linear-gradient(135deg, rgba(74,144,226,0.45), rgba(255,107,157,0.45));
       border-color: #4a90e2;
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(74,144,226,0.3);
     }
-
     .file-input-custom.has-file {
       background: linear-gradient(135deg, #4a90e2, #357abd);
       color: white;
       border-color: #4a90e2;
     }
-
     #imageInput {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       opacity: 0;
       width: 100%;
       height: 100%;
@@ -127,32 +111,26 @@
 
     input[type="text"], select, textarea {
       padding: 14px 18px;
-      border: 2px solid rgba(74, 144, 226, 0.4);
-      background: rgba(15, 15, 30, 0.95);
+      border: 2px solid rgba(74,144,226,0.4);
+      background: rgba(15,15,30,0.95);
       color: #f0f0f0;
       border-radius: 15px;
       font-size: 14px;
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
     }
-
     input[type="text"]:focus, select:focus, textarea:focus {
       outline: none;
       border-color: #4a90e2;
-      box-shadow: 0 0 20px rgba(74, 144, 226, 0.4);
+      box-shadow: 0 0 20px rgba(74,144,226,0.4);
       transform: translateY(-2px);
     }
-
-    textarea {
-      grid-column: 1 / -1;
-      resize: vertical;
-      min-height: 90px;
-    }
+    textarea { grid-column: 1 / -1; resize: vertical; min-height: 90px; }
 
     button {
       padding: 14px 24px;
       background: linear-gradient(135deg, rgba(74,144,226,0.25), rgba(255,107,157,0.25));
-      border: 2px solid rgba(74, 144, 226, 0.5);
+      border: 2px solid rgba(74,144,226,0.5);
       color: #f0f0f0;
       font-weight: 600;
       font-size: 14px;
@@ -164,44 +142,32 @@
       overflow: hidden;
       transition: all 0.3s ease;
     }
-
     button::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
       transition: left 0.5s;
     }
-
-    button:hover {
+    button:hover { 
       background: linear-gradient(135deg, rgba(74,144,226,0.5), rgba(255,107,157,0.5));
       border-color: #4a90e2;
       color: white;
       transform: translateY(-3px);
       box-shadow: 0 15px 35px rgba(74,144,226,0.4);
     }
-
-    button:hover::before {
-      left: 100%;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-    }
+    button:hover::before { left: 100%; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 
     .tabs {
       max-width: 900px;
       margin: 0 auto 20px;
       padding: 20px;
-      background: rgba(20, 20, 40, 0.9);
+      background: rgba(20,20,40,0.9);
       backdrop-filter: blur(20px);
       border-radius: 25px;
-      border: 2px solid rgba(74, 144, 226, 0.3);
+      border: 2px solid rgba(74,144,226,0.3);
       display: flex;
       justify-content: center;
       gap: 10px;
@@ -209,11 +175,10 @@
       overflow-x: auto;
       box-shadow: 0 15px 40px rgba(0,0,0,0.5);
     }
-
     .tab {
       padding: 12px 20px;
-      background: rgba(51, 51, 77, 0.9);
-      border: 2px solid rgba(74, 144, 226, 0.4);
+      background: rgba(51,51,77,0.9);
+      border: 2px solid rgba(74,144,226,0.4);
       color: #f0f0f0;
       cursor: pointer;
       border-radius: 25px;
@@ -224,7 +189,6 @@
       backdrop-filter: blur(15px);
       transition: all 0.4s ease;
     }
-
     .tab.active, .tab:hover {
       background: linear-gradient(135deg, #4a90e2, #357abd);
       border-color: #4a90e2;
@@ -242,26 +206,22 @@
       gap: 30px;
       justify-content: center;
     }
-
     .gallery-item {
       position: relative;
       border-radius: 25px;
       overflow: hidden;
-      background: rgba(26, 26, 44, 0.95);
-      border: 2px solid rgba(74, 144, 226, 0.3);
+      background: rgba(26,26,44,0.95);
+      border: 2px solid rgba(74,144,226,0.3);
       box-shadow: 0 20px 50px rgba(0,0,0,0.7);
       cursor: pointer;
       transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     .gallery-item.hidden { display: none !important; }
-
     .gallery-item:hover {
       transform: translateY(-15px) scale(1.02);
       box-shadow: 0 35px 70px rgba(74,144,226,0.4);
       border-color: #4a90e2;
     }
-
     .gallery-item img {
       width: 100%;
       height: 260px;
@@ -269,7 +229,6 @@
       object-position: center;
       display: block;
     }
-
     .category {
       position: absolute;
       top: 20px;
@@ -284,7 +243,6 @@
       box-shadow: 0 8px 25px rgba(74,144,226,0.4);
       z-index: 3;
     }
-
     .desc {
       padding: 25px 20px 50px 20px;
       text-align: center;
@@ -293,7 +251,6 @@
       z-index: 3;
       margin-top: 10px;
     }
-
     .date-added {
       position: absolute;
       bottom: 8px;
@@ -315,14 +272,11 @@
       display: none;
       position: fixed;
       z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
       background: rgba(0,0,0,0.97);
       backdrop-filter: blur(15px);
     }
-
     .modal-content {
       position: relative;
       max-width: 95vw;
@@ -335,7 +289,6 @@
       justify-content: center;
       padding: 20px;
     }
-
     .modal img {
       max-width: 100%;
       max-height: 95vh;
@@ -345,7 +298,6 @@
       border-radius: 20px;
       box-shadow: 0 30px 80px rgba(0,0,0,0.9);
     }
-
     .close-modal {
       position: fixed;
       top: 25px;
@@ -354,8 +306,7 @@
       font-size: 40px;
       cursor: pointer;
       background: linear-gradient(135deg, rgba(74,144,226,0.3), rgba(255,107,157,0.3));
-      width: 60px;
-      height: 60px;
+      width: 60px; height: 60px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -373,18 +324,22 @@
       font-weight: 500;
       display: none;
     }
+    .status {
+      text-align: center;
+      padding: 20px;
+      background: rgba(26,26,44,0.8);
+      border-radius: 15px;
+      margin: 20px auto;
+      max-width: 900px;
+      border: 1px solid rgba(74,144,226,0.3);
+    }
 
     @media (max-width: 768px) {
       .upload-form { grid-template-columns: 1fr; gap: 15px; }
       .tabs { gap: 8px; padding: 15px; }
       .tab { padding: 10px 14px; font-size: 13px; }
-      .gallery { 
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 25px; 
-        padding: 30px 15px; 
-      }
+      .gallery { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; padding: 30px 15px; }
     }
-
     @media (max-width: 480px) {
       .gallery { grid-template-columns: 1fr; }
       .tabs { flex-wrap: wrap; justify-content: center; }
@@ -396,9 +351,13 @@
 </head>
 <body>
   <header>
-    <h1>✨ Mon Portfolio Furry ✨</h1>
+    <h1>✨ Mon Portfolio Furry - Firebase ✨</h1>
     <p>Ref sheets • Headshots • Animations • PFP • Bannière • Stickers</p>
   </header>
+
+  <div id="status" class="status" style="display:none;">
+    🚀 <strong id="statusText">Chargement Firebase...</strong>
+  </div>
 
   <section class="upload-zone">
     <div class="upload-form">
@@ -417,19 +376,19 @@
         <option value="stickers">🎨 Stickers</option>
       </select>
       <textarea id="imageDesc" placeholder="Description (optionnel)"></textarea>
-      <button id="addBtn" onclick="addImage()">➕ Ajouter à la galerie</button>
-      <div id="uploadProgress" class="upload-progress">⏳ Upload en cours...</div>
+      <button id="addBtn">➕ Ajouter à la galerie</button>
+      <div id="uploadProgress" class="upload-progress">⏳ Upload Firebase...</div>
     </div>
   </section>
 
   <section class="tabs">
-    <button class="tab active" data-category="all" onclick="filterGallery('all')">🎨 Toutes</button>
-    <button class="tab" data-category="ref-sheet" onclick="filterGallery('ref-sheet')">📋 Ref Sheet</button>
-    <button class="tab" data-category="headshot" onclick="filterGallery('headshot')">👤 Headshot</button>
-    <button class="tab" data-category="animation" onclick="filterGallery('animation')">🎬 Animation</button>
-    <button class="tab" data-category="pfp" onclick="filterGallery('pfp')">🖼️ PFP</button>
-    <button class="tab" data-category="banner" onclick="filterGallery('banner')">📱 Bannière</button>
-    <button class="tab" data-category="stickers" onclick="filterGallery('stickers')">🎨 Stickers</button>
+    <button class="tab active" data-category="all">🎨 Toutes</button>
+    <button class="tab" data-category="ref-sheet">📋 Ref Sheet</button>
+    <button class="tab" data-category="headshot">👤 Headshot</button>
+    <button class="tab" data-category="animation">🎬 Animation</button>
+    <button class="tab" data-category="pfp">🖼️ PFP</button>
+    <button class="tab" data-category="banner">📱 Bannière</button>
+    <button class="tab" data-category="stickers">🎨 Stickers</button>
   </section>
 
   <section id="gallery" class="gallery"></section>
@@ -439,40 +398,42 @@
     <div class="modal-content" id="modalContent"></div>
   </div>
 
-  <script>
+  <!-- Firebase SDK v10 -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+    import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // 🔥 CONFIGURE ICI TES CLÉS FIREBASE
+    const firebaseConfig = {
+      // COLLER TA CONFIG ICI (depuis Firebase Console)
+      apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      authDomain: "tonprojet.firebaseapp.com",
+      projectId: "tonprojet",
+      storageBucket: "tonprojet.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef123456"
+    };
+
+    // Initialisation
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+    const db = getFirestore(app);
+
     let allImages = [];
     let currentModalIndex = 0;
     let currentFilter = 'all';
-    const STORAGE_KEY = 'furryPortfolio2026';
+    let isUploading = false;
 
-    // ✅ CHARGEMENT AU DEMARRAGE
-    function loadImages() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          allImages = JSON.parse(saved);
-          console.log('✅ Images chargées:', allImages.length);
-        }
-      } catch(e) {
-        console.error('Erreur chargement:', e);
-      }
-      renderGallery();
-      filterGallery('all');
-    }
+    // Status UI
+    const statusEl = document.getElementById('status');
+    const statusText = document.getElementById('statusText');
 
-    // ✅ SAUVEGARDE AUTOMATIQUE
-    function saveImages() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(allImages));
-        console.log('💾 Sauvegardé:', allImages.length, 'images');
-      } catch(e) {
-        console.error('Erreur sauvegarde:', e);
-        alert('⚠️ Stockage plein ! Supprime quelques images.');
-      }
-    }
+    // UI Elements
+    const addBtn = document.getElementById('addBtn');
+    const progress = document.getElementById('uploadProgress');
 
-    document.addEventListener('DOMContentLoaded', loadImages);
-
+    // Event listeners
     document.getElementById('imageInput').addEventListener('change', function() {
       const label = document.getElementById('fileInputLabel');
       if (this.files.length > 0) {
@@ -484,13 +445,45 @@
       }
     });
 
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        filterGallery(tab.dataset.category || tab.textContent);
+      });
+    });
+
+    // CHARGEMENT IMAGES FIREBASE
+    async function loadImages() {
+      try {
+        statusText.textContent = 'Chargement images...';
+        statusEl.style.display = 'block';
+
+        const q = query(collection(db, "portfolio"), orderBy("dateAdded", "desc"));
+        const querySnapshot = await getDocs(q);
+        allImages = [];
+
+        querySnapshot.forEach((doc) => {
+          allImages.push({ id: doc.id, ...doc.data() });
+        });
+
+        statusText.textContent = `✅ ${allImages.length} images chargées !`;
+        renderGallery();
+        setTimeout(() => statusEl.style.display = 'none', 2000);
+      } catch(error) {
+        statusText.textContent = '❌ Erreur Firebase: ' + error.message;
+        console.error("Erreur:", error);
+      }
+    }
+
+    // UPLOAD FIREBASE
     async function addImage() {
+      if (isUploading) return;
+
       const fileInput = document.getElementById('imageInput');
       const titleInput = document.getElementById('imageTitle');
       const categorySelect = document.getElementById('imageCategory');
       const descInput = document.getElementById('imageDesc');
-      const addBtn = document.getElementById('addBtn');
-      const progress = document.getElementById('uploadProgress');
 
       if (fileInput.files.length === 0) {
         alert('Veuillez sélectionner une image !');
@@ -498,73 +491,67 @@
       }
 
       const file = fileInput.files[0];
-      
-      // Vérif taille (10MB max)
       if (file.size > 10 * 1024 * 1024) {
         alert('❌ Image trop lourde (max 10MB)');
         return;
       }
 
-      // UI Upload
+      isUploading = true;
       addBtn.disabled = true;
+      addBtn.textContent = '⏳ Upload...';
       progress.style.display = 'block';
 
-      const reader = new FileReader();
-      
-      reader.onprogress = (e) => {
-        if (e.lengthComputable) {
-          const percent = Math.round((e.loaded / e.total) * 100);
-          progress.textContent = `⏳ Upload ${percent}%...`;
-        }
-      };
+      try {
+        // 1. Upload image vers Firebase Storage
+        progress.textContent = '📤 Upload image...';
+        const fileName = `portfolio/${Date.now()}_${file.name}`;
+        const storageRef = ref(storage, fileName);
+        await uploadBytes(storageRef, file);
+        const imageUrl = await getDownloadURL(storageRef);
 
-      reader.onload = function(e) {
+        // 2. Sauvegarde métadonnées Firestore
+        progress.textContent = '💾 Sauvegarde données...';
         const now = new Date();
-        const dateString = now.toLocaleDateString('fr-FR', { 
-          day: 'numeric', 
-          month: 'short', 
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
+        const dateString = now.toLocaleDateString('fr-FR', {
+          day: 'numeric', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
         });
 
-        const imageData = {
-          id: Date.now(),
+        await addDoc(collection(db, "portfolio"), {
           title: titleInput.value || 'Sans titre',
           category: categorySelect.value,
           description: descInput.value || '',
-          imageUrl: e.target.result, // Base64 pour localStorage
+          imageUrl: imageUrl,
           dateAdded: dateString,
-          size: file.size // Pour debug
-        };
+          timestamp: now
+        });
 
-        allImages.unshift(imageData);
-        saveImages(); // ✅ SAUVEGARDE
-        renderGallery();
-        filterGallery(currentFilter);
+        // 3. Refresh galerie
+        progress.textContent = '✅ Terminé !';
+        await loadImages();
 
         // Reset form
         setTimeout(() => {
           fileInput.value = '';
           titleInput.value = '';
           descInput.value = '';
-          const label = document.getElementById('fileInputLabel');
-          label.textContent = '📁 Choisir une image';
-          label.classList.remove('has-file');
+          document.getElementById('fileInputLabel').textContent = '📁 Choisir une image';
+          document.getElementById('fileInputLabel').classList.remove('has-file');
           categorySelect.selectedIndex = 0;
           addBtn.disabled = false;
+          addBtn.textContent = '➕ Ajouter à la galerie';
           progress.style.display = 'none';
-          progress.textContent = '⏳ Upload en cours...';
-        }, 1000);
-      };
+          isUploading = false;
+        }, 1500);
 
-      reader.onerror = () => {
-        alert('❌ Erreur lecture image');
+      } catch(error) {
+        console.error("Erreur:", error);
+        alert('❌ Erreur: ' + error.message);
         addBtn.disabled = false;
+        addBtn.textContent = '➕ Ajouter à la galerie';
         progress.style.display = 'none';
-      };
-
-      reader.readAsDataURL(file);
+        isUploading = false;
+      }
     }
 
     function renderGallery() {
@@ -587,14 +574,9 @@
 
     function filterGallery(category) {
       currentFilter = category;
-      
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.category === category);
-      });
-
       document.querySelectorAll('.gallery-item').forEach((item, index) => {
-        const itemCategory = allImages[index]?.category;
-        if (category === 'all' || itemCategory === category) {
+        const imageCategory = allImages[index]?.category;
+        if (category === 'all' || imageCategory === category) {
           item.classList.remove('hidden');
         } else {
           item.classList.add('hidden');
@@ -604,22 +586,16 @@
 
     function getCategoryEmoji(category) {
       const emojis = {
-        'ref-sheet': '📋',
-        'headshot': '👤',
-        'animation': '🎬',
-        'pfp': '🖼️',
-        'banner': '📱',
-        'stickers': '🎨'
+        'ref-sheet': '📋', 'headshot': '👤', 'animation': '🎬',
+        'pfp': '🖼️', 'banner': '📱', 'stickers': '🎨'
       };
       return emojis[category] || '🎨';
     }
 
     function openModal(index) {
-      currentModalIndex = index;
       const modal = document.getElementById('imageModal');
       const modalContent = document.getElementById('modalContent');
       const image = allImages[index];
-      
       modalContent.innerHTML = `<img src="${image.imageUrl}" alt="${image.title}">`;
       modal.style.display = 'block';
     }
@@ -628,17 +604,17 @@
       document.getElementById('imageModal').style.display = 'none';
     }
 
-    document.getElementById('imageModal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
+    // Event listeners
+    document.getElementById('imageModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('imageModal')) closeModal();
     });
-
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
     });
+    addBtn.addEventListener('click', addImage);
 
-    // ✅ NETTOYAGE si localStorage trop plein
-    window.addEventListener('storage', () => loadImages());
-    window.addEventListener('beforeunload', saveImages);
+    // Initialisation
+    loadImages();
   </script>
 </body>
 </html>
