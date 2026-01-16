@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Portfolio Furry - Firebase</title>
+  <title>Mon Portfolio Furry - Supabase</title>
   <style>
     * {
       box-sizing: border-box;
@@ -351,12 +351,12 @@
 </head>
 <body>
   <header>
-    <h1>✨ Mon Portfolio Furry - Firebase ✨</h1>
+    <h1>✨ Mon Portfolio Furry - Supabase ✨</h1>
     <p>Ref sheets • Headshots • Animations • PFP • Bannière • Stickers</p>
   </header>
 
   <div id="status" class="status" style="display:none;">
-    🚀 <strong id="statusText">Chargement Firebase...</strong>
+    🚀 <strong id="statusText">Chargement Supabase...</strong>
   </div>
 
   <section class="upload-zone">
@@ -377,7 +377,7 @@
       </select>
       <textarea id="imageDesc" placeholder="Description (optionnel)"></textarea>
       <button id="addBtn">➕ Ajouter à la galerie</button>
-      <div id="uploadProgress" class="upload-progress">⏳ Upload Firebase...</div>
+      <div id="uploadProgress" class="upload-progress">⏳ Upload Supabase...</div>
     </div>
   </section>
 
@@ -398,27 +398,14 @@
     <div class="modal-content" id="modalContent"></div>
   </div>
 
-  <!-- Firebase SDK v10 -->
+  <!-- Supabase JS v2 Client - TES VRAIES CLÉS INTÉGRÉES -->
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
-    import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    // 🔥 CONFIGURE ICI TES CLÉS FIREBASE
-    const firebaseConfig = {
-      // COLLER TA CONFIG ICI (depuis Firebase Console)
-      apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-      authDomain: "tonprojet.firebaseapp.com",
-      projectId: "tonprojet",
-      storageBucket: "tonprojet.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abcdef123456"
-    };
-
-    // Initialisation
-    const app = initializeApp(firebaseConfig);
-    const storage = getStorage(app);
-    const db = getFirestore(app);
+    // 🔥 TES CLÉS SUPABASE DÉJÀ CONFIGURÉES
+    const supabaseUrl = 'https://xkncnxeortxihznrjsxk.supabase.co';
+    const supabaseKey = 'sb_publishable_JtnSflUeTfWEEEDZ-zoK5Q_jZODYfU5';
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     let allImages = [];
     let currentModalIndex = 0;
@@ -453,30 +440,30 @@
       });
     });
 
-    // CHARGEMENT IMAGES FIREBASE
+    // CHARGEMENT IMAGES SUPABASE
     async function loadImages() {
       try {
         statusText.textContent = 'Chargement images...';
         statusEl.style.display = 'block';
 
-        const q = query(collection(db, "portfolio"), orderBy("dateAdded", "desc"));
-        const querySnapshot = await getDocs(q);
-        allImages = [];
+        const { data, error } = await supabase
+          .from('portfolio')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-        querySnapshot.forEach((doc) => {
-          allImages.push({ id: doc.id, ...doc.data() });
-        });
+        if (error) throw error;
 
+        allImages = data || [];
         statusText.textContent = `✅ ${allImages.length} images chargées !`;
         renderGallery();
         setTimeout(() => statusEl.style.display = 'none', 2000);
       } catch(error) {
-        statusText.textContent = '❌ Erreur Firebase: ' + error.message;
+        statusText.textContent = '❌ Erreur Supabase: ' + error.message;
         console.error("Erreur:", error);
       }
     }
 
-    // UPLOAD FIREBASE
+    // UPLOAD SUPABASE
     async function addImage() {
       if (isUploading) return;
 
@@ -502,14 +489,21 @@
       progress.style.display = 'block';
 
       try {
-        // 1. Upload image vers Firebase Storage
+        // 1. Upload image vers Supabase Storage (bucket "portfolio")
         progress.textContent = '📤 Upload image...';
-        const fileName = `portfolio/${Date.now()}_${file.name}`;
-        const storageRef = ref(storage, fileName);
-        await uploadBytes(storageRef, file);
-        const imageUrl = await getDownloadURL(storageRef);
+        const fileName = `${Date.now()}_${file.name}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('portfolio')
+          .upload(fileName, file, { upsert: true });
 
-        // 2. Sauvegarde métadonnées Firestore
+        if (uploadError) throw uploadError;
+
+        // 2. Récupérer l'URL publique
+        const { data: { publicUrl } } = supabase.storage
+          .from('portfolio')
+          .getPublicUrl(fileName);
+
+        // 3. Sauvegarde métadonnées dans la table "portfolio"
         progress.textContent = '💾 Sauvegarde données...';
         const now = new Date();
         const dateString = now.toLocaleDateString('fr-FR', {
@@ -517,16 +511,20 @@
           hour: '2-digit', minute: '2-digit'
         });
 
-        await addDoc(collection(db, "portfolio"), {
-          title: titleInput.value || 'Sans titre',
-          category: categorySelect.value,
-          description: descInput.value || '',
-          imageUrl: imageUrl,
-          dateAdded: dateString,
-          timestamp: now
-        });
+        const { error: insertError } = await supabase
+          .from('portfolio')
+          .insert({
+            title: titleInput.value || 'Sans titre',
+            category: categorySelect.value,
+            description: descInput.value || '',
+            image_url: publicUrl,
+            date_added: dateString,
+            created_at: now
+          });
 
-        // 3. Refresh galerie
+        if (insertError) throw insertError;
+
+        // 4. Refresh galerie
         progress.textContent = '✅ Terminé !';
         await loadImages();
 
@@ -563,10 +561,10 @@
         item.className = 'gallery-item';
         item.onclick = () => openModal(index);
         item.innerHTML = `
-          <img src="${image.imageUrl}" alt="${image.title}" loading="lazy">
+          <img src="${image.image_url}" alt="${image.title}" loading="lazy">
           <div class="category">${getCategoryEmoji(image.category)}</div>
           <div class="desc">${image.title}</div>
-          <div class="date-added">📅 ${image.dateAdded}</div>
+          <div class="date-added">📅 ${image.date_added}</div>
         `;
         gallery.appendChild(item);
       });
@@ -596,7 +594,7 @@
       const modal = document.getElementById('imageModal');
       const modalContent = document.getElementById('modalContent');
       const image = allImages[index];
-      modalContent.innerHTML = `<img src="${image.imageUrl}" alt="${image.title}">`;
+      modalContent.innerHTML = `<img src="${image.image_url}" alt="${image.title}">`;
       modal.style.display = 'block';
     }
 
