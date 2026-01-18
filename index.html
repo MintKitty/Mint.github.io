@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Portfolio Furry - Supabase</title>
+  <title>Mon Portfolio :3</title>
   <style>
     * {
       box-sizing: border-box;
@@ -351,7 +351,7 @@
 </head>
 <body>
   <header>
-    <h1>✨ Mon Portfolio Furry - Supabase ✨</h1>
+    <h1>✨ Mon Portfolio :3 ✨</h1>
     <p>Ref sheets • Headshots • Animations • PFP • Bannière • Stickers</p>
   </header>
 
@@ -398,29 +398,25 @@
     <div class="modal-content" id="modalContent"></div>
   </div>
 
-  <!-- Supabase JS v2 Client - TES VRAIES CLÉS INTÉGRÉES -->
+  <!-- Supabase JS v2 Client -->
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    // 🔥 TES CLÉS SUPABASE DÉJÀ CONFIGURÉES
     const supabaseUrl = 'https://xkncnxeortxihznrjsxk.supabase.co';
     const supabaseKey = 'sb_publishable_JtnSflUeTfWEEEDZ-zoK5Q_jZODYfU5';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     let allImages = [];
-    let currentModalIndex = 0;
     let currentFilter = 'all';
     let isUploading = false;
+    let isAdmin = false;
 
-    // Status UI
     const statusEl = document.getElementById('status');
     const statusText = document.getElementById('statusText');
-
-    // UI Elements
     const addBtn = document.getElementById('addBtn');
     const progress = document.getElementById('uploadProgress');
 
-    // Event listeners
+    // Affichage nom de fichier
     document.getElementById('imageInput').addEventListener('change', function() {
       const label = document.getElementById('fileInputLabel');
       if (this.files.length > 0) {
@@ -432,15 +428,28 @@
       }
     });
 
+    // Tabs
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        filterGallery(tab.dataset.category || tab.textContent);
+        filterGallery(tab.dataset.category || 'all');
       });
     });
 
-    // CHARGEMENT IMAGES SUPABASE
+    // Vérification admin au chargement
+    window.addEventListener('DOMContentLoaded', () => {
+      const pass = prompt("🔒 Mot de passe admin pour modifier le site (annuler si vous êtes visiteurs):");
+      if (pass === "Tim.23072010") { // ← change cette valeur
+        isAdmin = true;
+        document.querySelector('.upload-zone').style.display = 'block';
+      } else {
+        isAdmin = false;
+        document.querySelector('.upload-zone').style.display = 'none';
+      }
+      loadImages();
+    });
+
     async function loadImages() {
       try {
         statusText.textContent = 'Chargement images...';
@@ -454,17 +463,21 @@
         if (error) throw error;
 
         allImages = data || [];
-        statusText.textContent = `✅ ${allImages.length} images chargées !`;
         renderGallery();
+
+        statusText.textContent = `✅ ${allImages.length} images chargées !`;
         setTimeout(() => statusEl.style.display = 'none', 2000);
-      } catch(error) {
+      } catch (error) {
         statusText.textContent = '❌ Erreur Supabase: ' + error.message;
-        console.error("Erreur:", error);
+        console.error(error);
       }
     }
 
-    // UPLOAD SUPABASE
     async function addImage() {
+      if (!isAdmin) {
+        alert("Vous n'avez pas les droits pour ajouter des images !");
+        return;
+      }
       if (isUploading) return;
 
       const fileInput = document.getElementById('imageInput');
@@ -487,24 +500,22 @@
       addBtn.disabled = true;
       addBtn.textContent = '⏳ Upload...';
       progress.style.display = 'block';
+      progress.textContent = '📤 Upload image...';
 
       try {
-        // 1. Upload image vers Supabase Storage (bucket "portfolio")
-        progress.textContent = '📤 Upload image...';
         const fileName = `${Date.now()}_${file.name}`;
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('portfolio')
           .upload(fileName, file, { upsert: true });
 
         if (uploadError) throw uploadError;
 
-        // 2. Récupérer l'URL publique
         const { data: { publicUrl } } = supabase.storage
           .from('portfolio')
           .getPublicUrl(fileName);
 
-        // 3. Sauvegarde métadonnées dans la table "portfolio"
         progress.textContent = '💾 Sauvegarde données...';
+
         const now = new Date();
         const dateString = now.toLocaleDateString('fr-FR', {
           day: 'numeric', month: 'short', year: 'numeric',
@@ -524,11 +535,9 @@
 
         if (insertError) throw insertError;
 
-        // 4. Refresh galerie
         progress.textContent = '✅ Terminé !';
         await loadImages();
 
-        // Reset form
         setTimeout(() => {
           fileInput.value = '';
           titleInput.value = '';
@@ -542,8 +551,8 @@
           isUploading = false;
         }, 1500);
 
-      } catch(error) {
-        console.error("Erreur:", error);
+      } catch (error) {
+        console.error(error);
         alert('❌ Erreur: ' + error.message);
         addBtn.disabled = false;
         addBtn.textContent = '➕ Ajouter à la galerie';
@@ -568,11 +577,14 @@
         `;
         gallery.appendChild(item);
       });
+
+      filterGallery(currentFilter);
     }
 
     function filterGallery(category) {
       currentFilter = category;
-      document.querySelectorAll('.gallery-item').forEach((item, index) => {
+      const items = document.querySelectorAll('.gallery-item');
+      items.forEach((item, index) => {
         const imageCategory = allImages[index]?.category;
         if (category === 'all' || imageCategory === category) {
           item.classList.remove('hidden');
@@ -584,8 +596,12 @@
 
     function getCategoryEmoji(category) {
       const emojis = {
-        'ref-sheet': '📋', 'headshot': '👤', 'animation': '🎬',
-        'pfp': '🖼️', 'banner': '📱', 'stickers': '🎨'
+        'ref-sheet': '📋',
+        'headshot': '👤',
+        'animation': '🎬',
+        'pfp': '🖼️',
+        'banner': '📱',
+        'stickers': '🎨'
       };
       return emojis[category] || '🎨';
     }
@@ -602,7 +618,6 @@
       document.getElementById('imageModal').style.display = 'none';
     }
 
-    // Event listeners
     document.getElementById('imageModal').addEventListener('click', (e) => {
       if (e.target === document.getElementById('imageModal')) closeModal();
     });
@@ -610,9 +625,6 @@
       if (e.key === 'Escape') closeModal();
     });
     addBtn.addEventListener('click', addImage);
-
-    // Initialisation
-    loadImages();
   </script>
 </body>
 </html>
