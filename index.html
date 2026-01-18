@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mon Portfolio Furry - Supabase</title>
   <style>
+    /* TOUS LES STYLES ORIGINAUX RESTENT IDENTIQUES */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -159,6 +160,39 @@
     }
     button:hover::before { left: 100%; }
     button:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+    /* 🆕 NOUVEAUX STYLES ADMIN */
+    .admin-panel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+      background: rgba(26,26,44,0.95);
+      backdrop-filter: blur(25px);
+      border-radius: 20px;
+      padding: 15px;
+      border: 2px solid #4a90e2;
+      box-shadow: 0 20px 50px rgba(74,144,226,0.3);
+    }
+    .admin-btn {
+      padding: 10px 15px;
+      background: linear-gradient(135deg, #ff6b9d, #4a90e2);
+      border: none;
+      color: white;
+      border-radius: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+    .admin-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(74,144,226,0.4);
+    }
+    .admin-btn.delete {
+      background: linear-gradient(135deg, #ff4757, #ff3838);
+    }
 
     .tabs {
       max-width: 900px;
@@ -339,6 +373,7 @@
       .tabs { gap: 8px; padding: 15px; }
       .tab { padding: 10px 14px; font-size: 13px; }
       .gallery { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; padding: 30px 15px; }
+      .admin-panel { top: 10px; right: 10px; padding: 10px; }
     }
     @media (max-width: 480px) {
       .gallery { grid-template-columns: 1fr; }
@@ -359,13 +394,20 @@
     🚀 <strong id="statusText">Chargement Supabase...</strong>
   </div>
 
-  <section class="upload-zone">
+  <!-- 🆕 ZONE ADMIN (invisible pour visiteurs) -->
+  <div id="adminPanel" class="admin-panel" style="display: none;">
+    <h3>🔧 Mode Admin</h3>
+    <button class="admin-btn" onclick="toggleUploadZone()">➕ Ajouter image</button>
+    <button class="admin-btn" onclick="refreshGallery()">🔄 Rafraîchir</button>
+  </div>
+
+  <section id="uploadZone" class="upload-zone" style="display: none;">
     <div class="upload-form">
       <div class="file-input-wrapper">
         <input type="file" id="imageInput" accept="image/*">
         <div class="file-input-custom" id="fileInputLabel">📁 Choisir une image</div>
       </div>
-      
+
       <input type="text" id="imageTitle" placeholder="Titre">
       <select id="imageCategory">
         <option value="ref-sheet">📋 Ref Sheet</option>
@@ -408,9 +450,10 @@
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     let allImages = [];
-    let currentModalIndex = 0;
     let currentFilter = 'all';
     let isUploading = false;
+    let isAdmin = false;
+    const ADMIN_CODE = "furry2026admin"; // 🔑 CHANGE CE CODE !
 
     // Status UI
     const statusEl = document.getElementById('status');
@@ -419,9 +462,37 @@
     // UI Elements
     const addBtn = document.getElementById('addBtn');
     const progress = document.getElementById('uploadProgress');
+    const adminPanel = document.getElementById('adminPanel');
+    const uploadZone = document.getElementById('uploadZone');
+
+    // 🔐 VÉRIFICATION ADMIN AU CHARGEMENT
+    window.addEventListener('load', async () => {
+      const code = prompt("🔐 Code administrateur (laisse vide pour visiteur):");
+      if (code === ADMIN_CODE) {
+        isAdmin = true;
+        adminPanel.style.display = 'block';
+        uploadZone.style.display = 'block';
+        alert("✅ Mode administrateur activé !");
+      } else {
+        isAdmin = false;
+        adminPanel.style.display = 'none';
+        uploadZone.style.display = 'none';
+      }
+      await loadImages();
+    });
+
+    // 🆕 FONCTIONS ADMIN
+    window.toggleUploadZone = function() {
+      uploadZone.style.display = uploadZone.style.display === 'none' ? 'block' : 'none';
+    };
+
+    window.refreshGallery = async function() {
+      await loadImages();
+      alert("✅ Galerie rafraîchie !");
+    };
 
     // Event listeners
-    document.getElementById('imageInput').addEventListener('change', function() {
+    document.getElementById('imageInput')?.addEventListener('change', function() {
       const label = document.getElementById('fileInputLabel');
       if (this.files.length > 0) {
         label.textContent = this.files[0].name;
@@ -436,7 +507,7 @@
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        filterGallery(tab.dataset.category || tab.textContent);
+        filterGallery(tab.dataset.category);
       });
     });
 
@@ -463,8 +534,12 @@
       }
     }
 
-    // UPLOAD SUPABASE
+    // UPLOAD SUPABASE (protégé admin)
     async function addImage() {
+      if (!isAdmin) {
+        alert('🚫 Accès administrateur requis !');
+        return;
+      }
       if (isUploading) return;
 
       const fileInput = document.getElementById('imageInput');
@@ -489,7 +564,6 @@
       progress.style.display = 'block';
 
       try {
-        // 1. Upload image vers Supabase Storage (bucket "portfolio")
         progress.textContent = '📤 Upload image...';
         const fileName = `${Date.now()}_${file.name}`;
         const { data: uploadData, error: uploadError } = await supabase.storage
@@ -498,12 +572,10 @@
 
         if (uploadError) throw uploadError;
 
-        // 2. Récupérer l'URL publique
         const { data: { publicUrl } } = supabase.storage
           .from('portfolio')
           .getPublicUrl(fileName);
 
-        // 3. Sauvegarde métadonnées dans la table "portfolio"
         progress.textContent = '💾 Sauvegarde données...';
         const now = new Date();
         const dateString = now.toLocaleDateString('fr-FR', {
@@ -524,11 +596,9 @@
 
         if (insertError) throw insertError;
 
-        // 4. Refresh galerie
         progress.textContent = '✅ Terminé !';
         await loadImages();
 
-        // Reset form
         setTimeout(() => {
           fileInput.value = '';
           titleInput.value = '';
@@ -552,6 +622,7 @@
       }
     }
 
+    // 🆕 RENDER GALERIE AVEC BOUTONS ADMIN
     function renderGallery() {
       const gallery = document.getElementById('gallery');
       gallery.innerHTML = '';
@@ -559,60 +630,5 @@
       allImages.forEach((image, index) => {
         const item = document.createElement('div');
         item.className = 'gallery-item';
-        item.onclick = () => openModal(index);
-        item.innerHTML = `
-          <img src="${image.image_url}" alt="${image.title}" loading="lazy">
-          <div class="category">${getCategoryEmoji(image.category)}</div>
-          <div class="desc">${image.title}</div>
-          <div class="date-added">📅 ${image.date_added}</div>
-        `;
-        gallery.appendChild(item);
-      });
-    }
-
-    function filterGallery(category) {
-      currentFilter = category;
-      document.querySelectorAll('.gallery-item').forEach((item, index) => {
-        const imageCategory = allImages[index]?.category;
-        if (category === 'all' || imageCategory === category) {
-          item.classList.remove('hidden');
-        } else {
-          item.classList.add('hidden');
-        }
-      });
-    }
-
-    function getCategoryEmoji(category) {
-      const emojis = {
-        'ref-sheet': '📋', 'headshot': '👤', 'animation': '🎬',
-        'pfp': '🖼️', 'banner': '📱', 'stickers': '🎨'
-      };
-      return emojis[category] || '🎨';
-    }
-
-    function openModal(index) {
-      const modal = document.getElementById('imageModal');
-      const modalContent = document.getElementById('modalContent');
-      const image = allImages[index];
-      modalContent.innerHTML = `<img src="${image.image_url}" alt="${image.title}">`;
-      modal.style.display = 'block';
-    }
-
-    function closeModal() {
-      document.getElementById('imageModal').style.display = 'none';
-    }
-
-    // Event listeners
-    document.getElementById('imageModal').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('imageModal')) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
-    });
-    addBtn.addEventListener('click', addImage);
-
-    // Initialisation
-    loadImages();
-  </script>
-</body>
-</html>
+        item.onclick = (e) => {
+          if (e.target.tagName
