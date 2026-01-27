@@ -597,25 +597,26 @@
     const adminLoginBtn = document.getElementById('adminLoginBtn');
 
     // 🔐 CONNEXION ADMIN SÉCURISÉE (mot de passe NON visible)
-    adminLoginBtn.addEventListener('click', async () => {
-      const pass = prompt("🔒 Mot de passe admin:");
-      if (!pass) return;
-      
-      // Hash simple du mot de passe (côté client seulement pour démo)
-      const hash = btoa(pass).slice(0, 10);
-      const validHash = 'VGltLjIzMDcyMDEw'; // Hash de "Tim.23072010"
-      
-      
-      if (hash === validHash) {
-        isAdmin = true;
-        uploadZone.style.display = 'block';
-        adminLoginBtn.style.display = 'none';
-        alert('✅ Mode admin activé ! 🐾');
-        loadImages();
-      } else {
-        alert('❌ Mot de passe incorrect');
-      }
-    });
+    // Remplace TOUT le code admin par ça :
+adminLoginBtn.addEventListener('click', async () => {
+  const email = prompt("📧 Email:");
+  const password = prompt("🔑 Mot de passe:");
+  
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+  
+  if (error) {
+    alert('❌ Login échoué: ' + error.message);
+  } else {
+    isAdmin = true;
+    uploadZone.style.display = 'block';
+    adminLoginBtn.style.display = 'none';
+    alert('✅ Admin connecté ! 🐾');
+    loadImages();
+  }
+});
 
     document.getElementById('imageInput').addEventListener('change', function() {
       const label = document.getElementById('fileInputLabel');
