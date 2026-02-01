@@ -109,7 +109,7 @@
             <li>
             <img src="https://i.scdn.co/image/ab67616d0000b2736252116ae9c3f1dd7b103929" alt="Chanson 1" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
             <div style="display: inline-block; vertical-align: middle;">
-                <strong>Chanson 1</strong><br>
+                <strong>Freedom Dive - Xi</strong><br>
                 <span style="font-size: 0.9em; color: #999;">Durée: 3:45</span><br>
                 <a href="https://open.spotify.com/intl-fr/track/1DUA8KW4Fes6qfSlNJqvwj?si=f5916b6b8bfb4753" target="_blank" class="btn-preview">Écouter</a>
             </div>
@@ -117,7 +117,7 @@
             <li>
             <img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a0/fc/65/a0fc65cf-748a-2753-7fdb-094731ac6ecf/artwork.jpg/316x316bb.webp" alt="Chanson 2" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
             <div style="display: inline-block; vertical-align: middle;">
-                <strong>Chanson 2</strong><br>
+                <strong>not enough - s0rrow</strong><br>
                 <span style="font-size: 0.9em; color: #999;">Durée: 4:12</span><br>
                 <a href="https://open.spotify.com/intl-fr/track/3JaIL144R4rYQRAoe8bUBM?si=2b359ebeaa534c89" target="_blank" class="btn-preview">Écouter</a>
             </div>
@@ -125,7 +125,7 @@
             <li>
             <img src="https://i.scdn.co/image/ab67616d0000b273d5576840a73427145c1c9739" alt="Chanson 3" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
             <div style="display: inline-block; vertical-align: middle;">
-                <strong>Chanson 3</strong><br>
+                <strong>Occulation ( boss 4 theme ) - milkypossum</strong><br>
                 <span style="font-size: 0.9em; color: #999;">Durée: 3:28</span><br>
                 <a href="https://open.spotify.com/intl-fr/track/3OHIzcamAnbUBDena1RLUP?si=4ba7092d22d84578" target="_blank" class="btn-preview">Écouter</a>
             </div>
@@ -133,7 +133,7 @@
             <li>
             <img src="https://i.scdn.co/image/ab67616d0000b273ecf004fea6c243ee0a741082" alt="Chanson 4" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
             <div style="display: inline-block; vertical-align: middle;">
-                <strong>Chanson 4</strong><br>
+                <strong>this ain't addiction - inuday</strong><br>
                 <span style="font-size: 0.9em; color: #999;">Durée: 3:55</span><br>
                 <a href="https://open.spotify.com/intl-fr/track/6gnxTKruzpxY0sL7egmNc0?si=e75022470ce74201" target="_blank" class="btn-preview">Écouter</a>
             </div>
@@ -141,7 +141,7 @@
             <li>
             <img src="https://cdn-images.dzcdn.net/images/cover/c7ea0de3fd637d728a562f24769495f8/1900x1900-000000-80-0-0.jpg" alt="Chanson 5" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
             <div style="display: inline-block; vertical-align: middle;">
-                <strong>Chanson 5</strong><br>
+                <strong>пополам - dope17</strong><br>
                 <span style="font-size: 0.9em; color: #999;">Durée: 4:33</span><br>
                 <a href="https://open.spotify.com/intl-fr/track/4SOr2uzykZn6lByCKJXnmr?si=14bdc15ba63d430c" target="_blank" class="btn-preview">Écouter</a>
             </div>
@@ -467,4 +467,13 @@
     }
 
 })();
+</script>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+  const supabaseUrl = 'https://xkncnxeortxihznrjsxk.supabase.co'
+  const supabaseKey = 'sb_publishable_JtnSflUeTfWEEEDZ-zoK5Q_jZODYfU5'
+  const supabase = createClient(supabaseUrl, supabaseKey)
+
+  window.supabase = supabase
 </script>
