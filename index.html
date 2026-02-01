@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Comic Sans MS', 'Trebuchet MS', cursive;
-            background: #667eea;
+            background: #cdb8ff;
             padding: 20px;
             min-height: 100vh;
         }
@@ -21,22 +21,22 @@
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background: #f5f7fa;
+            background: #f8eff8;
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
-            border: 3px solid #667eea;
+            box-shadow: 0 8px 16px rgba(159, 102, 234, 0.3);
+            border: 3px solid #a466ea;
         }
         
         h1 {
             color: #764ba2;
             margin-bottom: 20px;
             font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(102, 126, 234, 0.2);
+            text-shadow: 2px 2px 4px rgba(192, 102, 234, 0.2);
         }
         
         .description {
-            color: #5a4d7a;
+            color: #724d7a;
             line-height: 1.8;
             margin-bottom: 20px;
             font-size: 1.1em;
@@ -50,15 +50,15 @@
         
         .spotify-section ul {
             list-style: none;
-            color: #5a4d7a;
+            color: #6f4d7a;
         }
         
         .spotify-section li {
             padding: 12px;
             margin: 8px 0;
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(197, 102, 234, 0.1);
             border-radius: 12px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #d066ea;
         }
         
         .spotify-section a {
@@ -68,12 +68,12 @@
         }
         
         .spotify-section a:hover {
-            color: #667eea;
+            color: #af66ea;
             text-decoration: underline;
         }
         
         .btn-portfolio {
-            background: #667eea;
+            background: #b566ea;
             color: white;
             padding: 12px 30px;
             border: none;
@@ -84,12 +84,12 @@
             margin-top: 20px;
             font-weight: bold;
             font-size: 1.1em;
-            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 8px rgba(212, 109, 253, 0.3);
         }
         
         .btn-portfolio:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 6px 12px rgba(180, 108, 248, 0.5);
         }
     </style>
 </head>
@@ -176,7 +176,7 @@
         padding: 10px; /* Reduced padding */
         background: #f5f7fa;
         border-radius: 10px; /* Reduced border radius */
-        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+        box-shadow: 0 2px 4px rgba(175, 102, 234, 0.2);
     }
 
     .social-section h2 {
@@ -191,7 +191,7 @@
     }
 
     .social-btn {
-        background: #667eea;
+        background: #b379ff;
         color: white;
         padding: 6px; /* Reduced padding */
         border-radius: 15px; /* Reduced border radius */
@@ -206,22 +206,169 @@
     }
 </style>
 
-<audio id="background-audio" style="display: none;" preload="auto">
-    <source src="musique/Freedom Dive_spotdown.org.mp3" type="audio/mpeg" data-name="Freedom Dive">
-    <source src="musique/not enough_spotdown.org.mp3" type="audio/mpeg" data-name="Not Enough">
-    <source src="musique/Occultation (Boss 4 Theme)_spotdown.org.mp3" type="audio/mpeg" data-name="Occultation">
-    <source src="musique/this ain't addiction_spotdown.org.mp3" type="audio/mpeg" data-name="This Ain't Addiction">
-    <source src="musique/пополам_spotdown.org.mp3" type="audio/mpeg" data-name="Пополам">
-</audio>
+<!-- Garde ton audio VIDE comme ça -->
+<audio id="background-audio" style="display: none;" preload="auto"></audio>
 
-<div id="audio-controls" style="position: fixed; top: 20px; right: 20px; background: #667eea; border-radius: 15px; padding: 15px; box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);">
+<!-- Tes contrôles restent identiques -->
+<div id="audio-controls">...</div>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+  // TES VRAIES CLÉS
+  const supabaseUrl = 'https://godyjjvpxujmulrxoijz.supabase.co'
+  const supabaseKey = 'sb_publishable_WKP5m-PSGLKUB6QH3h67-Q_qOiJxACe'
+  const supabase = createClient(supabaseUrl, supabaseKey)
+
+  const audio = document.getElementById('background-audio')
+  const currentSongDisplay = document.getElementById('current-song')
+  const playPauseButton = document.getElementById('play-pause-button')
+  const nextButton = document.getElementById('next-button')
+  const prevButton = document.getElementById('prev-button')
+  const volumeSlider = document.getElementById('volume-slider')
+  const volumeValue = document.getElementById('volume-value')
+
+  let tracks = []
+  let currentTrackIndex = 0
+  let isPlaying = false
+
+  // POUR DISCORD RPC
+  window.currentTrackIndex = currentTrackIndex
+
+  currentSongDisplay.textContent = '🔄 Chargement playlist...'
+
+  async function loadPlaylist() {
+    try {
+      const { data, error } = await supabase
+        .from('tracks')
+        .select('title, artist, storage_path')
+        .order('position', { ascending: true })
+
+      if (error) throw error
+      
+      tracks = data || []
+      console.log('✅ Playlist chargée:', tracks.length, 'morceaux')
+      console.log('Tracks:', tracks)
+
+      if (tracks.length === 0) {
+        currentSongDisplay.textContent = '❌ Aucune musique dans la base'
+        return
+      }
+
+      await setTrack(0)
+    } catch (error) {
+      console.error('❌ Erreur Supabase:', error.message)
+      currentSongDisplay.textContent = `❌ Erreur: ${error.message}`
+    }
+  }
+
+  async function getPublicUrl(path) {
+    try {
+      const { data } = supabase.storage
+        .from('music')  // ← Vérifie que ton bucket s'appelle bien "music"
+        .getPublicUrl(path)
+      return data.publicUrl
+    } catch (error) {
+      console.error('❌ Erreur URL:', error)
+      return null
+    }
+  }
+
+  async function setTrack(index) {
+    try {
+      currentTrackIndex = Math.abs(index) % tracks.length
+      window.currentTrackIndex = currentTrackIndex
+
+      const track = tracks[currentTrackIndex]
+      const url = await getPublicUrl(track.storage_path)
+
+      if (!url) {
+        console.error('❌ URL manquante pour:', track.title)
+        currentSongDisplay.textContent = `❌ Fichier manquant: ${track.title}`
+        return
+      }
+
+      console.log('🎵 Chargement:', track.title, url)
+      audio.src = url
+      updateSongDisplay()
+      audio.dispatchEvent(new Event('trackchange'))
+
+      if (isPlaying) {
+        await audio.play().catch(e => {
+          console.error('❌ Erreur lecture:', e)
+          isPlaying = false
+        })
+      }
+    } catch (error) {
+      console.error('❌ setTrack erreur:', error)
+    }
+  }
+
+  function updateSongDisplay() {
+    if (tracks.length === 0 || !tracks[currentTrackIndex]) {
+      return
+    }
+    const track = tracks[currentTrackIndex]
+    const name = track.title + (track.artist ? ` - ${track.artist}` : '')
+    currentSongDisplay.textContent = isPlaying ? `⏸ ${name}` : `▶ ${name}`
+  }
+
+  // CONFIG AUDIO
+  audio.volume = 0.9
+  audio.loop = false
+
+  // VOLUME
+  if (volumeSlider) {
+    volumeSlider.oninput = e => {
+      audio.volume = e.target.value / 100
+      if (volumeValue) volumeValue.textContent = e.target.value + '%'
+    }
+  }
+
+  // PLAY/PAUSE
+  if (playPauseButton) {
+    playPauseButton.onclick = async () => {
+      if (!tracks.length) return
+
+      isPlaying = !isPlaying
+      if (isPlaying) {
+        try {
+          playPauseButton.textContent = '⏸ Pause'
+          await audio.play()
+        } catch (e) {
+          console.error('❌ Lecture impossible:', e)
+          isPlaying = false
+          playPauseButton.textContent = '▶ Play'
+        }
+      } else {
+        audio.pause()
+        playPauseButton.textContent = '▶ Play'
+      }
+      updateSongDisplay()
+    }
+  }
+
+  // NEXT/PREV
+  if (nextButton) nextButton.onclick = () => tracks.length && setTrack(currentTrackIndex + 1)
+  if (prevButton) prevButton.onclick = () => tracks.length && setTrack(currentTrackIndex - 1)
+
+  // FIN PISTE → SUIVANTE
+  audio.onended = () => tracks.length && setTrack(currentTrackIndex + 1)
+
+  // LANCEMENT
+  loadPlaylist()
+</script>
+
+
+
+<div id="audio-controls" style="position: fixed; top: 20px; right: 20px; background: #9966ea; border-radius: 15px; padding: 15px; box-shadow: 0 4px 8px rgba(181, 102, 234, 0.3);">
     <div style="color: white; margin-bottom: 10px; font-weight: bold; text-align: center;">
         <span id="current-song">▶ Play</span>
     </div>
     <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-        <button id="prev-button" style="background: white; color: #667eea; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold;">⏮ Prev</button>
-        <button id="play-pause-button" style="background: white; color: #667eea; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold;">▶ Play</button>
-        <button id="next-button" style="background: white; color: #667eea; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold;">⏭ Next</button>
+        <button id="prev-button" style="background: white; color: #cb66ea; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold;">⏮ Prev</button>
+        <button id="play-pause-button" style="background: white; color: #cb66ea; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold;">▶ Play</button>
+        <button id="next-button" style="background: white; color: #df66ea; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold;">⏭ Next</button>
     </div>
     <div style="display: flex; gap: 10px; align-items: center;">
         <label style="color: white; font-size: 0.9em;">🔊</label>
