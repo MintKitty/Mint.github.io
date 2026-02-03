@@ -91,6 +91,10 @@
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(180, 108, 248, 0.5);
         }
+        
+        @media (max-width: 600px) {
+    body { padding-bottom: 180px !important; }
+}
     </style>
 </head>
 <body>
@@ -210,7 +214,7 @@
 <audio id="background-audio" style="display: none;" preload="auto"></audio>
 
 <!-- Tes contrôles restent identiques -->
-<div id="audio-controls">...</div>
+<div id="audio-controls"></div>
 
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
@@ -361,20 +365,47 @@
 
 
 
-<div id="audio-controls" style="position: fixed; top: 20px; right: 20px; background: #9966ea; border-radius: 15px; padding: 15px; box-shadow: 0 4px 8px rgba(181, 102, 234, 0.3);">
-    <div style="color: white; margin-bottom: 10px; font-weight: bold; text-align: center;">
-        <span id="current-song">▶ Play</span>
-    </div>
-    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
-        <button id="prev-button" style="background: white; color: #cb66ea; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold;">⏮ Prev</button>
-        <button id="play-pause-button" style="background: white; color: #cb66ea; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold;">▶ Play</button>
-        <button id="next-button" style="background: white; color: #df66ea; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; font-weight: bold;">⏭ Next</button>
-    </div>
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <label style="color: white; font-size: 0.9em;">🔊</label>
-        <input id="volume-slider" type="range" min="0" max="100" value="90" style="width: 100px; cursor: pointer;">
-        <span id="volume-value" style="color: white; font-size: 0.9em; width: 30px;">90%</span>
-    </div>
+<div id="audio-controls" style="
+    position: fixed; 
+    bottom: 15px; right: 15px; 
+    background: #9966ea; 
+    border-radius: 12px; 
+    padding: 8px; 
+    box-shadow: 0 4px 12px rgba(181,102,234,0.4); 
+    z-index: 1000;
+    max-width: 160px;
+">
+  <!-- Player audio + Discord COMBINÉ (petit et mobile-friendly) -->
+<div id="player-compact" style="
+    position: fixed; 
+    bottom: 10px; left: 50%; 
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #9966ea, #764ba2); 
+    border-radius: 12px; 
+    padding: 8px;
+    box-shadow: 0 6px 20px rgba(181,102,234,0.5);
+    z-index: 999;
+    max-width: 280px; min-width: 240px;
+    font-size: 0.8em;
+">
+  <!-- Titre chanson -->
+  <div style="color: white; text-align: center; margin-bottom: 4px; font-weight: bold;">
+    <span id="current-song">♪ Playlist</span>
+  </div>
+  
+  <!-- Boutons -->
+  <div style="display: flex; gap: 3px; align-items: center; justify-content: center; margin-bottom: 4px;">
+    <button id="prev-button" style="background: rgba(255,255,255,0.9); color: #cb66ea; border: none; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-weight: bold; min-width: 28px; font-size: 0.9em;">⏮</button>
+    <button id="play-pause-button" style="background: rgba(255,255,255,0.9); color: #cb66ea; border: none; border-radius: 4px; padding: 3px 8px; cursor: pointer; font-weight: bold; min-width: 32px; font-size: 0.9em;">▶</button>
+    <button id="next-button" style="background: rgba(255,255,255,0.9); color: #df66ea; border: none; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-weight: bold; min-width: 28px; font-size: 0.9em;">⏭</button>
+  </div>
+  
+  <!-- Volume -->
+  <div style="display: flex; gap: 2px; align-items: center; font-size: 0.75em;">
+    <span style="color: white;">🔊</span>
+    <input id="volume-slider" type="range" min="0" max="100" value="90" style="flex: 1; max-width: 80px;">
+    <span id="volume-value" style="color: white; min-width: 18px;">90</span>
+  </div>
 </div>
 
 <script>
@@ -447,174 +478,6 @@
     });
 </script>
 
-<script>
-(function(){
-    if (document.getElementById('discord-rpc')) return; // évite les doublons
-
-    // Récupère pseudo/avatar depuis la section réseaux si possible
-    const discordLinkEl = document.querySelector('.social-btn.discord');
-    const usernameFromLink = discordLinkEl ? discordLinkEl.textContent.trim().replace(/^.*:\s*/, '') : null;
-    const rpcConfig = {
-        username: usernameFromLink || 'Mint',
-        avatar: 'unnamed-1.jpg', // placez votre photo dans `img/avatar.png` ou changez ce chemin
-        badges: '❤ · 🔮',
-        subtitle: 'Hello there! :3'
-    };
-
-    // Vérifie si l'avatar local existe, sinon utilise un fallback public
-    (function checkAvatar(){
-        const img = new Image();
-        img.onload = () => {}; // ok
-        img.onerror = () => { rpcConfig.avatar = 'unnamed-1.jpg'; };
-        img.src = rpcConfig.avatar;
-    })();
-    // Ajoute les styles si nécessaire (ajout progress bar etc.)
-    if (!document.getElementById('discord-rpc-styles')){
-        const style = document.createElement('style');
-        style.id = 'discord-rpc-styles';
-        style.textContent = `
-            .discord-rpc{ position: fixed; bottom:20px; right:20px; background: linear-gradient(135deg, rgba(54,57,63,0.96), rgba(44,47,51,0.96)); color:#fff; border-radius:12px; padding:12px; box-shadow: 0 8px 24px rgba(0,0,0,0.45); display:flex; gap:12px; align-items:center; max-width: 360px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-            .discord-rpc .rpc-avatar{ position: relative; width: 64px; height:64px; border-radius:50%; overflow:hidden; flex-shrink:0; box-shadow: 0 0 0 3px rgba(0,0,0,0.25); }
-            .discord-rpc .rpc-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-            .discord-rpc .rpc-status-dot{ position:absolute; right:6px; bottom:6px; width:12px; height:12px; border-radius:50%; background:#6c6f73; border:2px solid #fff; box-shadow:0 0 0 4px rgba(0,0,0,0.12); }
-            .discord-rpc .rpc-info{ display:flex; flex-direction:column; gap:4px; min-width:0; }
-            .discord-rpc .rpc-username{ color:#ff6b81; font-weight:700; font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-            .discord-rpc .rpc-badges{ margin-left:6px; font-size:0.95rem; opacity:0.95; }
-            .discord-rpc .rpc-sub{ color:#b9bbbe; font-size:0.85rem; }
-            .discord-rpc .rpc-song{ color:#e6edf3; font-weight:600; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px; }
-            .discord-rpc .rpc-progress-wrap{ display:flex; align-items:center; gap:8px; margin-top:6px; }
-            .discord-rpc .rpc-progress{ height:6px; background: rgba(255,255,255,0.08); border-radius:6px; width:180px; overflow:hidden; }
-            .discord-rpc .rpc-progress-bar{ height:100%; width:0%; background: linear-gradient(90deg,#57f287,#57a0f2); }
-            .discord-rpc .rpc-times{ color:#99a0ad; font-size:0.75rem; min-width:65px; text-align:right; }
-            .discord-rpc .rpc-lastseen{ color:#99a0ad; font-size:0.82rem; }
-        `;
-        document.head.appendChild(style);
-    }
-
-    const discordRPC = document.createElement('div');
-    discordRPC.id = 'discord-rpc';
-    discordRPC.className = 'discord-rpc';
-    discordRPC.innerHTML = `
-        <div class="rpc-avatar" id="rpc-avatar">
-            <img src="${rpcConfig.avatar}" alt="avatar">
-            <span class="rpc-status-dot" id="rpc-status-dot"></span>
-        </div>
-        <div class="rpc-info">
-            <div style="display:flex; align-items:center; gap:6px;">
-                <div class="rpc-username" id="rpc-username">${rpcConfig.username}</div>
-                <div class="rpc-badges">${rpcConfig.badges}</div>
-            </div>
-            <div class="rpc-sub">${rpcConfig.subtitle}</div>
-            <div class="rpc-song" id="rpc-song">—</div>
-            <div class="rpc-progress-wrap">
-                <div class="rpc-progress" aria-hidden="true"><div class="rpc-progress-bar" id="rpc-progress-bar"></div></div>
-                <div class="rpc-times"><span id="rpc-elapsed">0:00</span> / <span id="rpc-duration">0:00</span></div>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(discordRPC);
-
-    // Helpers
-    function fmt(sec){
-        if (!isFinite(sec) || isNaN(sec)) return '0:00';
-        const m = Math.floor(sec/60); const s = Math.floor(sec%60); return `${m}:${String(s).padStart(2,'0')}`;
-    }
-
-    const audioEl = document.getElementById('background-audio');
-    const songEl = document.getElementById('rpc-song');
-    const elapsedEl = document.getElementById('rpc-elapsed');
-    const durationEl = document.getElementById('rpc-duration');
-    const progressBar = document.getElementById('rpc-progress-bar');
-    const statusDot = document.getElementById('rpc-status-dot');
-    const usernameEl = document.getElementById('rpc-username');
-
-    // Obtain current track name and index from global controls if available
-    
-    function getCurrentTrack(){
-        // try to use global currentTrackIndex if present, otherwise match audio.src to source list
-        
-        let idx = (typeof window.currentTrackIndex === 'number') ? window.currentTrackIndex : null;
-        const sources = audioEl ? audioEl.querySelectorAll('source') : [];
-        if (idx === null && audioEl){
-            const src = audioEl.currentSrc || audioEl.src || '';
-            for (let i=0;i<sources.length;i++) if (sources[i].src && src.includes(sources[i].src)) { idx = i; break; }
-            if (idx === null) idx = 0;
-        }
-        const name = (sources[idx] && sources[idx].getAttribute('data-name')) || sources[idx]?.src?.split('/').pop() || 'Unknown';
-        const src = sources[idx] ? sources[idx].src : (audioEl ? audioEl.src : '');
-        return { idx, name, src };
-    }
-
-    function updateTrackInfo(){
-        const t = getCurrentTrack();
-        songEl.textContent = t.name;
-        // try to show duration when metadata loaded
-        if (audioEl && isFinite(audioEl.duration)) durationEl.textContent = fmt(audioEl.duration);
-        else durationEl.textContent = '0:00';
-    }
-
-    function updateTime(){
-        if (!audioEl) return;
-        elapsedEl.textContent = fmt(audioEl.currentTime);
-        const dur = isFinite(audioEl.duration) ? audioEl.duration : 0;
-        const pct = dur > 0 ? Math.max(0, Math.min(100, audioEl.currentTime / dur * 100)) : 0;
-        progressBar.style.width = pct + '%';
-    }
-
-    function setPlaying(){
-        statusDot.style.background = '#57f287';
-        // set last seen to 'listening now'
-        const lastEl = document.getElementById('rpc-elapsed');
-        // we also show 'listening now' as subtext temporarily by changing subtitle color
-        
-        const sub = discordRPC.querySelector('.rpc-sub');
-        if (sub) sub.textContent = 'listening now';
-        updateTime();
-    }
-
-    function setPaused(){
-        statusDot.style.background = '#6c6f73';
-        const sub = discordRPC.querySelector('.rpc-sub');
-        if (sub) sub.textContent = rpcConfig.subtitle;
-    }
-
-    // Events
-    if (audioEl){
-        audioEl.addEventListener('loadedmetadata', () => { updateTrackInfo(); updateTime(); if (isFinite(audioEl.duration)) durationEl.textContent = fmt(audioEl.duration); });
-        audioEl.addEventListener('timeupdate', updateTime);
-        audioEl.addEventListener('play', () => { setPlaying(); });
-        audioEl.addEventListener('pause', () => { setPaused(); });
-        audioEl.addEventListener('ended', () => { setPaused(); updateTime(); });
-        // écoute les changements de piste demandés par les contrôles (next/prev)
-        audioEl.addEventListener('trackchange', () => { updateTrackInfo(); updateTime(); });
-    }
-
-    // Hook next/prev controls if they exist to refresh info on track change
-    const nextBtn = document.getElementById('next-button');
-    const prevBtn = document.getElementById('prev-button');
-    if (nextBtn) nextBtn.addEventListener('click', () => { setTimeout(() => { updateTrackInfo(); updateTime(); }, 50); });
-    if (prevBtn) prevBtn.addEventListener('click', () => { setTimeout(() => { updateTrackInfo(); updateTime(); }, 50); });
-
-    // Init UI
-    updateTrackInfo(); updateTime(); setPaused();
-
-    // Interaction: cliquer avatar pour ouvrir le lien Discord (si présent) ou copier le pseudo
-    const avatarWrap = document.getElementById('rpc-avatar');
-    if (avatarWrap){
-        avatarWrap.style.cursor = 'pointer';
-        avatarWrap.title = 'Ouvrir le profil Discord / Copier le pseudo';
-        avatarWrap.addEventListener('click', (e) => {
-            if (discordLinkEl && discordLinkEl.href) { window.open(discordLinkEl.href, '_blank'); return; }
-            // sinon copie le pseudo
-            navigator.clipboard?.writeText(rpcConfig.username).then(()=>{
-                const tmp = document.createElement('div'); tmp.textContent = 'Nom copié !'; tmp.style.position='fixed'; tmp.style.right='20px'; tmp.style.bottom='100px'; tmp.style.background='#333'; tmp.style.color='#fff'; tmp.style.padding='8px'; tmp.style.borderRadius='6px'; document.body.appendChild(tmp); setTimeout(()=>tmp.remove(),1200);
-            });
-        });
-    }
-
-})();
-</script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
