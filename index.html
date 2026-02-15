@@ -31,7 +31,7 @@
         }
 
         @keyframes furBlow {
-            0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+            0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
             50% { background-position: 25px 15px, -40px 30px, 50px -20px, 100px 80px, 200px 150px, -150px 250px; }
             100% { background-position: 50px 30px, -80px 60px, 100px -40px, 200px 160px, 400px 300px, -300px 500px; }
         }
@@ -269,6 +269,9 @@
             font-size: 0.85em;
             border: 2px solid rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(10px);
+            /* Pour Dark Reader */
+            filter: none !important;
+            color-scheme: light;
         }
 
         #player-compact > div:first-child {
@@ -277,15 +280,7 @@
             margin-bottom: 10px;
             font-weight: bold;
             font-size: 0.9em;
-        }
-
-        #player-compact > div:nth-child(2) {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
+            filter: none !important;
         }
 
         #player-compact button {
@@ -300,12 +295,7 @@
             transition: all 0.3s ease;
             min-width: 36px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        #player-compact button:hover {
-            background: #fff5f5;
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+            filter: none !important;
         }
 
         #player-compact > div:nth-child(3) {
