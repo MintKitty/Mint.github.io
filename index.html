@@ -12,45 +12,137 @@
         }
         
         body {
-            font-family: 'Comic Sans MS', 'Trebuchet MS', cursive;
-            background: #cdb8ff;
-            padding: 20px;
+            font-family: 'Segoe UI', -apple-system, Blink;
+            background-color: #fdf8f0;
+            background-image:
+                repeating-radial-gradient(circle at 3px 3px, #f0e8d8 1px, transparent 1px),
+                repeating-radial-gradient(circle at 25px 25px, #e8d9c0 2px, transparent 2px),
+                repeating-radial-gradient(ellipse at 15px 40px, #f5f0e5 3px, transparent 3px),
+                repeating-linear-gradient(45deg, transparent 49px, rgba(240,232,216,0.4) 49px, rgba(240,232,216,0.4) 51px, transparent 0),
+                radial-gradient(circle at 120px 80px, rgba(255,255,255,0.3) 0%, transparent 50%),
+                radial-gradient(circle at 280px 200px, rgba(255,255,255,0.2) 0%, transparent 50%);
+            color: #4a3f2e;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background-size: 50px 50px, 80px 80px, 100px 120px, 200px 200px, 400px 400px, 500px 500px;
+            animation: furBlow 25s ease-in-out infinite alternate;
+            padding: 20px;
         }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #f8eff8;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(159, 102, 234, 0.3);
-            border: 3px solid #a466ea;
+
+        @keyframes furBlow {
+            0% { 
+                background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+            }
+            50% { 
+                background-position: 25px 15px, -40px 30px, 50px -20px, 100px 80px, 200px 150px, -150px 250px;
+            }
+            100% { 
+                background-position: 50px 30px, -80px 60px, 100px -40px, 200px 160px, 400px 300px, -300px 500px;
+            }
         }
-        
-        h1 {
-            color: #764ba2;
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: 
+                linear-gradient(135deg, rgba(255,255,255,0.9), rgba(253,248,240,0.95)),
+                radial-gradient(circle at 50% 0%, rgba(255,255,255,0.8), transparent 70%);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(255,182,193,0.4);
             margin-bottom: 20px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(192, 102, 234, 0.2);
+            border-radius: 0 0 32px 32px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        header::before {
+            content: '🐾 🐾 🐾';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            opacity: 0.7;
+            animation: pawFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes pawFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+            33% { transform: translateX(-50%) translateY(-6px) rotate(5deg); }
+            66% { transform: translateX(-50%) translateY(-3px) rotate(-5deg); }
+        }
+
+        h1 {
+            font-size: clamp(2em, 5vw, 3.2em);
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff9aa2, #ffb6c1, #ffcccb, #ffd1dc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(255,182,193,0.3);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: 
+                linear-gradient(135deg, rgba(255,255,255,0.95), rgba(253,248,240,0.98)),
+                radial-gradient(circle at 20% 10%, rgba(255,255,255,0.9), transparent 60%);
+            padding: 30px;
+            border-radius: 32px;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.12),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            border: 3px solid rgba(255,182,193,0.5);
+            backdrop-filter: blur(25px);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,182,193,0.1) 0%, transparent 70%);
+            animation: furGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes furGlow {
+            0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.5; }
+            50% { transform: rotate(180deg) scale(1.1); opacity: 0.8; }
         }
         
         .description {
-            color: #724d7a;
+            color: #4a3f2e;
             line-height: 1.8;
             margin-bottom: 20px;
             font-size: 1.1em;
+            position: relative;
+            z-index: 1;
         }
         
+        .spotify-section {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 20px;
+        }
+
         .spotify-section h2 {
-            color: #764ba2;
+            color: #ff9aa2;
             margin-bottom: 15px;
             font-size: 1.8em;
         }
         
         .spotify-section ul {
             list-style: none;
-            color: #6f4d7a;
+            color: #ff9aa2;
         }
         
         .spotify-section li {
@@ -58,25 +150,28 @@
             margin: 8px 0;
             background: rgba(197, 102, 234, 0.1);
             border-radius: 12px;
-            border-left: 4px solid #d066ea;
+            border-left: 4px solid #ff9aa2;
+            display: flex;
+            align-items: center;
         }
         
         .spotify-section a {
-            color: #764ba2;
+            color: #ff9aa2;
             text-decoration: none;
             font-weight: bold;
+            transition: all 0.3s ease;
         }
         
         .spotify-section a:hover {
-            color: #af66ea;
+            color: #ffb6c1;
             text-decoration: underline;
         }
         
         .btn-portfolio {
-            background: #b566ea;
-            color: white;
+            background: linear-gradient(135deg, rgba(255,182,193,0.4), rgba(255,220,230,0.5));
+            color: #4a3f2e;
             padding: 12px 30px;
-            border: none;
+            border: 3px solid rgba(255,182,193,0.6);
             border-radius: 25px;
             cursor: pointer;
             text-decoration: none;
@@ -84,431 +179,469 @@
             margin-top: 20px;
             font-weight: bold;
             font-size: 1.1em;
-            box-shadow: 0 4px 8px rgba(212, 109, 253, 0.3);
+            box-shadow: 0 8px 25px rgba(255,182,193,0.3);
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .btn-portfolio::before {
+            content: '🐾';
+            position: absolute;
+            top: 50%;
+            left: -120%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            transition: left 0.6s ease;
+            z-index: 1;
         }
         
         .btn-portfolio:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(180, 108, 248, 0.5);
+            background: linear-gradient(135deg, rgba(255,182,193,0.7), rgba(255,220,230,0.8));
+            border-color: #ff9aa2;
+            color: #3a2f1e;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(255,182,193,0.5);
+        }
+
+        .btn-portfolio:hover::before {
+            left: 50%;
         }
         
-        @media (max-width: 600px) {
-    body { padding-bottom: 180px !important; }
-}
+        .social-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 25px;
+            background: 
+                linear-gradient(135deg, rgba(255,255,255,0.95), rgba(253,248,240,0.98)),
+                radial-gradient(circle at 20% 10%, rgba(255,255,255,0.9), transparent 60%);
+            border-radius: 32px;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.12),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            border: 3px solid rgba(255,182,193,0.4);
+            backdrop-filter: blur(25px);
+            position: relative;
+            overflow: hidden;
+        }
 
-@media (min-width: 769px) {
-    #player-compact {
-        bottom: auto !important;
-        top: 20px !important;
-        left: auto !important;
-        right: 20px !important;
-        transform: none !important;
-        max-width: 220px;
-    }
-}
+        .social-section h2 {
+            color: #ff9aa2;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
 
-@media (max-width: 768px) {
-    body { 
-        padding-bottom: 180px !important; 
-    }
-    #player-compact {
-        top: auto !important;
-        bottom: 8px !important;
-        left: 50% !important;
-        right: auto !important;
-        transform: translateX(-50%) !important;
-        max-width: 280px;
-    }
-}
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .social-btn {
+            background: linear-gradient(135deg, rgba(255,182,193,0.4), rgba(255,220,230,0.5));
+            color: #4a3f2e;
+            padding: 14px 24px;
+            border: 3px solid rgba(255,182,193,0.6);
+            border-radius: 22px;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 6px 20px rgba(255,182,193,0.2);
+            display: block;
+        }
+
+        .social-btn:hover {
+            background: linear-gradient(135deg, rgba(255,182,193,0.7), rgba(255,220,230,0.8));
+            border-color: #ffb6c1;
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(255,182,193,0.5);
+        }
+
+        @media (max-width: 768px) {
+            body { 
+                padding-bottom: 180px;
+            }
+            .container {
+                padding: 25px;
+                border-radius: 28px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            .spotify-section li {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .spotify-section li img {
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+        }
+
+         #player-compact {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff9aa2, #ffb6c1);
+            border-radius: 20px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 32px rgba(255, 182, 193, 0.6);
+            z-index: 999;
+            max-width: 320px;
+            min-width: 280px;
+            font-size: 0.85em;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        #player-compact > div:first-child {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        #player-compact > div:nth-child(2) {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        #player-compact button {
+            background: white;
+            color: #ff9aa2;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            min-width: 36px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        #player-compact button:hover {
+            background: #fff5f5;
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        #player-compact > div:nth-child(3) {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+        }
+
+        #player-compact input[type="range"] {
+            flex: 1;
+            max-width: 100px;
+            cursor: pointer;
+        }
+
+        #volume-value {
+            color: white;
+            min-width: 30px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            #player-compact {
+                max-width: 90%;
+                min-width: auto;
+                bottom: 10px;
+                padding: 10px 12px;
+            }
+
+            #player-compact button {
+                padding: 6px 10px;
+                font-size: 0.9em;
+            }
+        }
+
+        #player-compact {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: auto;
+            bottom: auto;
+            transform: none;
+            background: linear-gradient(135deg, #ff9aa2, #ffb6c1);
+            border-radius: 20px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 32px rgba(255, 182, 193, 0.6);
+            z-index: 999;
+            max-width: 320px;
+            min-width: 280px;
+            font-size: 0.85em;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            #player-compact {
+                top: auto;
+                bottom: 10px;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                max-width: 90%;
+                min-width: auto;
+                padding: 10px 12px;
+            }
+
+            #player-compact button {
+                padding: 6px 10px;
+                font-size: 0.9em;
+            }
+        }
     </style>
 </head>
 <body>
+    <header>
+        <h1>✨ Bienvenue! :p ✨</h1>
+    </header>
+
     <div class="container">
-        <h1>Bienvenue! :p ( unfinish )</h1>
-        
         <p class="description">
             <strong>Salut! Je suis Mint</strong> :3<br><br>
             J'ai 15 ans et je suis dans la communauté furries depuis 6 ans maintenant :O<br><br>
-            Je veux faire des rencontres, partager mes passions et être plus présent dans communauté! Mon fursona <strong>Noctys</strong> est disponible sur mon portfolio, et je posterai tous "mes" dessins ici ! :3
+            Je veux faire des rencontres, partager mes passions et être plus présent dans la communauté! Mon fursona <strong>Noctys</strong> est disponible sur mon portfolio, et je posterai tous mes dessins ici ! :3
         </p>
         
         <div class="spotify-section">
             <h2>🎵 Mes Musiques Préférées</h2>
             <ul>
-            <li>
-            <img src="https://i.scdn.co/image/ab67616d0000b2736252116ae9c3f1dd7b103929" alt="Chanson 1" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
-            <div style="display: inline-block; vertical-align: middle;">
-                <strong>Freedom Dive - Xi</strong><br>
-                <span style="font-size: 0.9em; color: #999;">Durée: 3:45</span><br>
-                <a href="https://open.spotify.com/intl-fr/track/1DUA8KW4Fes6qfSlNJqvwj?si=f5916b6b8bfb4753" target="_blank" class="btn-preview">Écouter</a>
-            </div>
-            </li>
-            <li>
-            <img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a0/fc/65/a0fc65cf-748a-2753-7fdb-094731ac6ecf/artwork.jpg/316x316bb.webp" alt="Chanson 2" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
-            <div style="display: inline-block; vertical-align: middle;">
-                <strong>not enough - s0rrow</strong><br>
-                <span style="font-size: 0.9em; color: #999;">Durée: 4:12</span><br>
-                <a href="https://open.spotify.com/intl-fr/track/3JaIL144R4rYQRAoe8bUBM?si=2b359ebeaa534c89" target="_blank" class="btn-preview">Écouter</a>
-            </div>
-            </li>
-            <li>
-            <img src="https://i.scdn.co/image/ab67616d0000b273d5576840a73427145c1c9739" alt="Chanson 3" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
-            <div style="display: inline-block; vertical-align: middle;">
-                <strong>Occulation ( boss 4 theme ) - milkypossum</strong><br>
-                <span style="font-size: 0.9em; color: #999;">Durée: 3:28</span><br>
-                <a href="https://open.spotify.com/intl-fr/track/3OHIzcamAnbUBDena1RLUP?si=4ba7092d22d84578" target="_blank" class="btn-preview">Écouter</a>
-            </div>
-            </li>
-            <li>
-            <img src="https://i.scdn.co/image/ab67616d0000b273ecf004fea6c243ee0a741082" alt="Chanson 4" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
-            <div style="display: inline-block; vertical-align: middle;">
-                <strong>this ain't addiction - inuday</strong><br>
-                <span style="font-size: 0.9em; color: #999;">Durée: 3:55</span><br>
-                <a href="https://open.spotify.com/intl-fr/track/6gnxTKruzpxY0sL7egmNc0?si=e75022470ce74201" target="_blank" class="btn-preview">Écouter</a>
-            </div>
-            </li>
-            <li>
-            <img src="https://cdn-images.dzcdn.net/images/cover/c7ea0de3fd637d728a562f24769495f8/1900x1900-000000-80-0-0.jpg" alt="Chanson 5" style="width: 80px; height: 80px; margin-right: 10px; vertical-align: middle;">
-            <div style="display: inline-block; vertical-align: middle;">
-                <strong>пополам - dope17</strong><br>
-                <span style="font-size: 0.9em; color: #999;">Durée: 4:33</span><br>
-                <a href="https://open.spotify.com/intl-fr/track/4SOr2uzykZn6lByCKJXnmr?si=14bdc15ba63d430c" target="_blank" class="btn-preview">Écouter</a>
-            </div>
-            </li>
+                <li>
+                    <img src="https://i.scdn.co/image/ab67616d0000b2736252116ae9c3f1dd7b103929" alt="Freedom Dive" style="width: 60px; height: 60px; margin-right: 15px; border-radius: 8px; flex-shrink: 0;">
+                    <div>
+                        <strong>Freedom Dive - Xi</strong><br>
+                        <a href="https://open.spotify.com/intl-fr/track/1DUA8KW4Fes6qfSlNJqvwj?si=f5916b6b8bfb4753" target="_blank">Écouter sur Spotify 🎵</a>
+                    </div>
+                </li>
+                <li>
+                    <img src="https://i.scdn.co/image/ab67616d0000b273f127a762f10c9e5d84575e77" alt="Trouble Sleeping" style="width: 60px; height: 60px; margin-right: 15px; border-radius: 8px; flex-shrink: 0;">
+                    <div>
+                        <strong>Trouble Sleeping - Blade and Bath</strong><br>
+                        <a href="https://open.spotify.com/intl-fr/track/3JaIL144R4rYQRAoe8bUBM?si=2b359ebeaa534c89" target="_blank">Écouter sur Spotify 🎵</a>
+                    </div>
+                </li>
+                <li>
+                    <img src="https://i.scdn.co/image/ab67616d0000b273d5576840a73427145c1c9739" alt="Occulation" style="width: 60px; height: 60px; margin-right: 15px; border-radius: 8px; flex-shrink: 0;">
+                    <div>
+                        <strong>Occulation (boss 4 theme) - milkypossum</strong><br>
+                        <a href="https://open.spotify.com/intl-fr/track/3OHIzcamAnbUBDena1RLUP?si=4ba7092d22d84578" target="_blank">Écouter sur Spotify 🎵</a>
+                    </div>
+                </li>
+                <li>
+                    <img src="https://i.scdn.co/image/ab67616d0000b273ecf004fea6c243ee0a741082" alt="this ain't addiction" style="width: 60px; height: 60px; margin-right: 15px; border-radius: 8px; flex-shrink: 0;">
+                    <div>
+                        <strong>this ain't addiction - inuday</strong><br>
+                        <a href="https://open.spotify.com/intl-fr/track/6gnxTKruzpxY0sL7egmNc0?si=e75022470ce74201" target="_blank">Écouter sur Spotify 🎵</a>
+                    </div>
+                </li>
+                <li>
+                    <img src="https://cdn-images.dzcdn.net/images/cover/c7ea0de3fd637d728a562f24769495f8/1900x1900-000000-80-0-0.jpg" alt="пополам" style="width: 60px; height: 60px; margin-right: 15px; border-radius: 8px; flex-shrink: 0;">
+                    <div>
+                        <strong>пополам - dope17</strong><br>
+                        <a href="https://open.spotify.com/intl-fr/track/4SOr2uzykZn6lByCKJXnmr?si=14bdc15ba63d430c" target="_blank">Écouter sur Spotify 🎵</a>
+                    </div>
+                </li>
             </ul>
         </div>
         
-        <a href="portfolio.html" class="btn-portfolio">Voir mon Portfolio</a>
+        <a href="portfolio.html" class="btn-portfolio">📁 Voir mon Portfolio</a>
     </div>
+
+    <div class="social-section">
+        <h2>🔗 Mes Réseaux Sociaux</h2>
+        <div class="social-links">
+            <a href="https://twitter.com/Fiaskerss" target="_blank" class="social-btn">
+                𝕏 Twitter : Fiaskerss
+            </a>
+            <a href="https://instagram.com/__m1nt___" target="_blank" class="social-btn">
+                📷 Instagram : __m1nt___
+            </a>
+            <a href="https://tiktok.com/@Fiaskerss" target="_blank" class="social-btn">
+                🎵 TikTok : Fiaskerss
+            </a>
+            <a href="https://discord.com/users/_m1nt_." target="_blank" class="social-btn">
+                💬 Discord : _m1nt_.
+            </a>
+        </div>
+    </div>
+
+    <audio id="background-audio" style="display: none;" preload="auto"></audio>
 </body>
-<div class="social-section">
-    <h2>🔗 Mes Réseaux Sociaux</h2>
-    <div class="social-links">
-        <a href="https://twitter.com/Fiaskerss" target="_blank" class="social-btn twitter">
-            𝕏 Twitter : Fiaskerss
-        </a>
-        <a href="https://instagram.com/__m1nt___" target="_blank" class="social-btn instagram">
-            📷 Instagram : __m1nt___
-        </a>
-        <a href="https://tiktok.com/@Fiaskerss" target="_blank" class="social-btn tiktok">
-            🎵 TikTok : Fiaskerss
-        </a>
-        <a href="https://discord.com/users/_m1nt_." target="_blank" class="social-btn discord">
-            💬 Discord : _m1nt_.
-        </a>
+</html>
+
+    <audio id="background-audio" style="display: none;" preload="auto"></audio>
+
+    <div id="player-compact">
+        <div style="color: white; text-align: center; margin-bottom: 4px; font-weight: bold;">
+            <span id="current-song">♪ Playlist</span>
+        </div>
+        
+        <div style="display: flex; gap: 3px; align-items: center; justify-content: center; margin-bottom: 4px; flex-wrap: wrap;">
+            <button id="prev-button" style="background: rgba(255,255,255,0.9); color: #ff9aa2; border: none; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-weight: bold; min-width: 28px; font-size: 0.9em;">⏮</button>
+            <button id="play-pause-button" style="background: rgba(255,255,255,0.9); color: #ff9aa2; border: none; border-radius: 4px; padding: 3px 8px; cursor: pointer; font-weight: bold; min-width: 32px; font-size: 0.9em;">▶</button>
+            <button id="next-button" style="background: rgba(255,255,255,0.9); color: #ff9aa2; border: none; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-weight: bold; min-width: 28px; font-size: 0.9em;">⏭</button>
+        </div>
+        
+        <div style="display: flex; gap: 2px; align-items: center; font-size: 0.75em;">
+            <span style="color: white;">🔊</span>
+            <input id="volume-slider" type="range" min="0" max="100" value="90" style="flex: 1; max-width: 80px;">
+            <span id="volume-value" style="color: white; min-width: 18px;">90%</span>
+        </div>
     </div>
-</div>
 
-<style>
-    .social-section {
-        margin-top: 20px;
-        padding: 10px; /* Reduced padding */
-        background: #f5f7fa;
-        border-radius: 10px; /* Reduced border radius */
-        box-shadow: 0 2px 4px rgba(175, 102, 234, 0.2);
-    }
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-    .social-section h2 {
-        color: #764ba2;
-        margin-bottom: 8px; /* Reduced margin */
-        font-size: 1.3em; /* Reduced font size */
-    }
+        const supabaseUrl = 'https://godyjjvpxujmulrxoijz.supabase.co'
+        const supabaseKey = 'sb_publishable_WKP5m-PSGLKUB6QH3h67-Q_qOiJxACe'
+        const supabase = createClient(supabaseUrl, supabaseKey)
 
-    .social-links {
-        display: flex;
-        flex-direction: column;
-    }
+        const playPauseButton = document.getElementById('play-pause-button')
+        const nextButton = document.getElementById('next-button')
+        const prevButton = document.getElementById('prev-button')
+        const volumeSlider = document.getElementById('volume-slider')
+        const volumeValue = document.getElementById('volume-value')
+        const currentSongDisplay = document.getElementById('current-song')
+        const audio = document.getElementById('background-audio')
 
-    .social-btn {
-        background: #b379ff;
-        color: white;
-        padding: 6px; /* Reduced padding */
-        border-radius: 15px; /* Reduced border radius */
-        text-decoration: none;
-        margin: 3px 0; /* Reduced margin */
-        text-align: center;
-        transition: background 0.3s;
-    }
+        let tracks = []
+        let currentTrackIndex = 0
+        let isPlaying = false
 
-    .social-btn:hover {
-        background: #764ba2;
-    }
-</style>
+        window.currentTrackIndex = currentTrackIndex
 
-<!-- Garde ton audio VIDE comme ça -->
-<audio id="background-audio" style="display: none;" preload="auto"></audio>
+        currentSongDisplay.textContent = '🔄 Chargement playlist...'
 
-<!-- Tes contrôles restent identiques -->
-<div id="audio-controls"></div>
-
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-  // TES VRAIES CLÉS
-  const supabaseUrl = 'https://godyjjvpxujmulrxoijz.supabase.co'
-  const supabaseKey = 'sb_publishable_WKP5m-PSGLKUB6QH3h67-Q_qOiJxACe'
-  const supabase = createClient(supabaseUrl, supabaseKey)
-
-  const audio = document.getElementById('background-audio')
-  const currentSongDisplay = document.getElementById('current-song')
-  const playPauseButton = document.getElementById('play-pause-button')
-  const nextButton = document.getElementById('next-button')
-  const prevButton = document.getElementById('prev-button')
-  const volumeSlider = document.getElementById('volume-slider')
-  const volumeValue = document.getElementById('volume-value')
-
-  let tracks = []
-  let currentTrackIndex = 0
-  let isPlaying = false
-
-  // POUR DISCORD RPC
-  window.currentTrackIndex = currentTrackIndex
-
-  currentSongDisplay.textContent = '🔄 Chargement playlist...'
-
-  async function loadPlaylist() {
-    try {
-      const { data, error } = await supabase
-        .from('tracks')
-        .select('title, artist, storage_path')
-        .order('position', { ascending: true })
-
-      if (error) throw error
-      
-      tracks = data || []
-      console.log('✅ Playlist chargée:', tracks.length, 'morceaux')
-      console.log('Tracks:', tracks)
-
-      if (tracks.length === 0) {
-        currentSongDisplay.textContent = '❌ Aucune musique dans la base'
-        return
-      }
-
-      await setTrack(0)
-    } catch (error) {
-      console.error('❌ Erreur Supabase:', error.message)
-      currentSongDisplay.textContent = `❌ Erreur: ${error.message}`
-    }
-  }
-
-  async function getPublicUrl(path) {
-    try {
-      const { data } = supabase.storage
-        .from('music')  // ← Vérifie que ton bucket s'appelle bien "music"
-        .getPublicUrl(path)
-      return data.publicUrl
-    } catch (error) {
-      console.error('❌ Erreur URL:', error)
-      return null
-    }
-  }
-
-  async function setTrack(index) {
-    try {
-      currentTrackIndex = Math.abs(index) % tracks.length
-      window.currentTrackIndex = currentTrackIndex
-
-      const track = tracks[currentTrackIndex]
-      const url = await getPublicUrl(track.storage_path)
-
-      if (!url) {
-        console.error('❌ URL manquante pour:', track.title)
-        currentSongDisplay.textContent = `❌ Fichier manquant: ${track.title}`
-        return
-      }
-
-      console.log('🎵 Chargement:', track.title, url)
-      audio.src = url
-      updateSongDisplay()
-      audio.dispatchEvent(new Event('trackchange'))
-
-      if (isPlaying) {
-        await audio.play().catch(e => {
-          console.error('❌ Erreur lecture:', e)
-          isPlaying = false
-        })
-      }
-    } catch (error) {
-      console.error('❌ setTrack erreur:', error)
-    }
-  }
-
-  function updateSongDisplay() {
-    if (tracks.length === 0 || !tracks[currentTrackIndex]) {
-      return
-    }
-    const track = tracks[currentTrackIndex]
-    const name = track.title + (track.artist ? ` - ${track.artist}` : '')
-    currentSongDisplay.textContent = isPlaying ? `⏸ ${name}` : `▶ ${name}`
-  }
-
-  // CONFIG AUDIO
-  audio.volume = 0.9
-  audio.loop = false
-
-  // VOLUME
-  if (volumeSlider) {
-    volumeSlider.oninput = e => {
-      audio.volume = e.target.value / 100
-      if (volumeValue) volumeValue.textContent = e.target.value + '%'
-    }
-  }
-
-  // PLAY/PAUSE
-  if (playPauseButton) {
-    playPauseButton.onclick = async () => {
-      if (!tracks.length) return
-
-      isPlaying = !isPlaying
-      if (isPlaying) {
-        try {
-          playPauseButton.textContent = '⏸ Pause'
-          await audio.play()
-        } catch (e) {
-          console.error('❌ Lecture impossible:', e)
-          isPlaying = false
-          playPauseButton.textContent = '▶ Play'
-        }
-      } else {
-        audio.pause()
-        playPauseButton.textContent = '▶ Play'
-      }
-      updateSongDisplay()
-    }
-  }
-
-  // NEXT/PREV
-  if (nextButton) nextButton.onclick = () => tracks.length && setTrack(currentTrackIndex + 1)
-  if (prevButton) prevButton.onclick = () => tracks.length && setTrack(currentTrackIndex - 1)
-
-  // FIN PISTE → SUIVANTE
-  audio.onended = () => tracks.length && setTrack(currentTrackIndex + 1)
-
-  // LANCEMENT
-  loadPlaylist()
-</script>
-
-
-
-<div id="audio-controls" style="
-    position: fixed; 
-    bottom: 15px; right: 15px; 
-    background: #9966ea; 
-    border-radius: 12px; 
-    padding: 8px; 
-    box-shadow: 0 4px 12px rgba(181,102,234,0.4); 
-    z-index: 1000;
-    max-width: 160px;
-">
-  <!-- Player audio + Discord COMBINÉ (petit et mobile-friendly) -->
-<div id="player-compact" style="
-    position: fixed; 
-    bottom: 10px; left: 50%; 
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #9966ea, #764ba2); 
-    border-radius: 12px; 
-    padding: 8px;
-    box-shadow: 0 6px 20px rgba(181,102,234,0.5);
-    z-index: 999;
-    max-width: 280px; min-width: 240px;
-    font-size: 0.8em;
-">
-  <!-- Titre chanson -->
-  <div style="color: white; text-align: center; margin-bottom: 4px; font-weight: bold;">
-    <span id="current-song">♪ Playlist</span>
-  </div>
-  
-  <!-- Boutons -->
-  <div style="display: flex; gap: 3px; align-items: center; justify-content: center; margin-bottom: 4px;">
-    <button id="prev-button" style="background: rgba(255,255,255,0.9); color: #cb66ea; border: none; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-weight: bold; min-width: 28px; font-size: 0.9em;">⏮</button>
-    <button id="play-pause-button" style="background: rgba(255,255,255,0.9); color: #cb66ea; border: none; border-radius: 4px; padding: 3px 8px; cursor: pointer; font-weight: bold; min-width: 32px; font-size: 0.9em;">▶</button>
-    <button id="next-button" style="background: rgba(255,255,255,0.9); color: #df66ea; border: none; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-weight: bold; min-width: 28px; font-size: 0.9em;">⏭</button>
-  </div>
-  
-  <!-- Volume -->
-  <div style="display: flex; gap: 2px; align-items: center; font-size: 0.75em;">
-    <span style="color: white;">🔊</span>
-    <input id="volume-slider" type="range" min="0" max="100" value="90" style="flex: 1; max-width: 80px;">
-    <span id="volume-value" style="color: white; min-width: 18px;">90</span>
-  </div>
-</div>
-
-<script>
-    const playPauseButton = document.getElementById('play-pause-button');
-    const nextButton = document.getElementById('next-button');
-    const prevButton = document.getElementById('prev-button');
-    const volumeSlider = document.getElementById('volume-slider');
-    const volumeValue = document.getElementById('volume-value');
-    const currentSongDisplay = document.getElementById('current-song');
-    const audio = document.getElementById('background-audio');
-    const sources = audio.querySelectorAll('source');
-    
-    audio.loop = false;
-    audio.volume = 0.9;
-    let isPlaying = false;
-    let currentTrackIndex = 0;
-    // expose pour que d'autres scripts puissent connaître la piste courante
-    window.currentTrackIndex = currentTrackIndex;
-
-    function updateSongDisplay() {
-        const songName = sources[currentTrackIndex].getAttribute('data-name');
-        currentSongDisplay.textContent = isPlaying ? '⏸ ' + songName : '▶ ' + songName;
-    }
-
-    volumeSlider.addEventListener('input', (e) => {
-        const volume = e.target.value / 100;
-        audio.volume = volume;
-        volumeValue.textContent = e.target.value + '%';
-    });
-
-    playPauseButton.addEventListener('click', async () => {
-        isPlaying = !isPlaying;
-        if (isPlaying) {
+        async function loadPlaylist() {
             try {
-                await audio.play();
-                playPauseButton.textContent = '⏸ Pause';
-            } catch (err) {
-                console.error('Impossible de démarrer la lecture:', err);
-                isPlaying = false;
+                const { data, error } = await supabase
+                    .from('tracks')
+                    .select('title, artist, storage_path')
+                    .order('position', { ascending: true })
+
+                if (error) throw error
+                
+                tracks = data || []
+                console.log('✅ Playlist chargée:', tracks.length, 'morceaux')
+
+                if (tracks.length === 0) {
+                    currentSongDisplay.textContent = '❌ Aucune musique'
+                    return
+                }
+
+                await setTrack(0)
+            } catch (error) {
+                console.error('❌ Erreur Supabase:', error.message)
+                currentSongDisplay.textContent = `❌ Erreur: ${error.message}`
             }
-        } else {
-            audio.pause();
-            playPauseButton.textContent = '▶ Play';
         }
-        updateSongDisplay();
-    });
 
-    nextButton.addEventListener('click', () => {
-        currentTrackIndex = (currentTrackIndex + 1) % sources.length;
-        window.currentTrackIndex = currentTrackIndex;
-        audio.src = sources[currentTrackIndex].src;
-        updateSongDisplay();
-        // notifie les autres scripts (RPC) qu'une nouvelle piste est active
-        audio.dispatchEvent(new Event('trackchange'));
-        if (isPlaying) audio.play();
-    });
+        async function getPublicUrl(path) {
+            try {
+                const { data } = supabase.storage
+                    .from('music')
+                    .getPublicUrl(path)
+                return data.publicUrl
+            } catch (error) {
+                console.error('❌ Erreur URL:', error)
+                return null
+            }
+        }
 
-    prevButton.addEventListener('click', () => {
-        currentTrackIndex = (currentTrackIndex - 1 + sources.length) % sources.length;
-        window.currentTrackIndex = currentTrackIndex;
-        audio.src = sources[currentTrackIndex].src;
-        updateSongDisplay();
-        audio.dispatchEvent(new Event('trackchange'));
-        if (isPlaying) audio.play();
-    });
+        async function setTrack(index) {
+            try {
+                currentTrackIndex = Math.abs(index) % tracks.length
+                window.currentTrackIndex = currentTrackIndex
 
-    audio.addEventListener('error', (e) => {
-        console.error('Audio error:', e);
-        alert('Erreur de chargement audio.');
-    });
-</script>
+                const track = tracks[currentTrackIndex]
+                const url = await getPublicUrl(track.storage_path)
 
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+                if (!url) {
+                    console.error('❌ URL manquante pour:', track.title)
+                    currentSongDisplay.textContent = `❌ Fichier manquant`
+                    return
+                }
 
-  const supabaseUrl = 'https://xkncnxeortxihznrjsxk.supabase.co'
-  const supabaseKey = 'sb_publishable_JtnSflUeTfWEEEDZ-zoK5Q_jZODYfU5'
-  const supabase = createClient(supabaseUrl, supabaseKey)
+                audio.src = url
+                updateSongDisplay()
+                audio.dispatchEvent(new Event('trackchange'))
 
-  window.supabase = supabase
-</script>
+                if (isPlaying) {
+                    audio.play().catch(e => {
+                        console.error('❌ Erreur lecture:', e)
+                        isPlaying = false
+                    })
+                }
+            } catch (error) {
+                console.error('❌ setTrack erreur:', error)
+            }
+        }
+
+        function updateSongDisplay() {
+            if (tracks.length === 0 || !tracks[currentTrackIndex]) return
+            const track = tracks[currentTrackIndex]
+            const name = track.title + (track.artist ? ` - ${track.artist}` : '')
+            currentSongDisplay.textContent = isPlaying ? `⏸ ${name}` : `▶ ${name}`
+        }
+
+        audio.volume = 0.9
+        audio.loop = false
+
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value / 100
+            volumeValue.textContent = e.target.value + '%'
+        })
+
+        playPauseButton.addEventListener('click', async () => {
+            if (!tracks.length) return
+            isPlaying = !isPlaying
+            if (isPlaying) {
+                try {
+                    playPauseButton.textContent = '⏸'
+                    await audio.play()
+                } catch (e) {
+                    console.error('❌ Erreur lecture:', e)
+                    isPlaying = false
+                    playPauseButton.textContent = '▶'
+                }
+            } else {
+                audio.pause()
+                playPauseButton.textContent = '▶'
+            }
+            updateSongDisplay()
+        })
+
+        nextButton.addEventListener('click', () => tracks.length && setTrack(currentTrackIndex + 1))
+        prevButton.addEventListener('click', () => tracks.length && setTrack(currentTrackIndex - 1))
+
+        audio.addEventListener('ended', () => tracks.length && setTrack(currentTrackIndex + 1))
+
+        loadPlaylist()
+    </script>
+</body>
+</html>
