@@ -31,15 +31,9 @@
         }
 
         @keyframes furBlow {
-            0% { 
-                background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
-            }
-            50% { 
-                background-position: 25px 15px, -40px 30px, 50px -20px, 100px 80px, 200px 150px, -150px 250px;
-            }
-            100% { 
-                background-position: 50px 30px, -80px 60px, 100px -40px, 200px 160px, 400px 300px, -300px 500px;
-            }
+            0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+            50% { background-position: 25px 15px, -40px 30px, 50px -20px, 100px 80px, 200px 150px, -150px 250px; }
+            100% { background-position: 50px 30px, -80px 60px, 100px -40px, 200px 160px, 400px 300px, -300px 500px; }
         }
 
         header {
@@ -142,7 +136,6 @@
         
         .spotify-section ul {
             list-style: none;
-            color: #ff9aa2;
         }
         
         .spotify-section li {
@@ -262,34 +255,7 @@
             box-shadow: 0 15px 40px rgba(255,182,193,0.5);
         }
 
-        @media (max-width: 768px) {
-            body { 
-                padding-bottom: 180px;
-            }
-            .container {
-                padding: 25px;
-                border-radius: 28px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-            }
-            .spotify-section li {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .spotify-section li img {
-                margin-bottom: 10px;
-                margin-right: 0;
-            }
-        }
-
-         #player-compact {
+        #player-compact {
             position: fixed;
             top: 20px;
             right: 20px;
@@ -364,6 +330,10 @@
         }
 
         @media (max-width: 768px) {
+            body { padding-bottom: 180px; }
+            .container { padding: 25px; border-radius: 28px; }
+            h1 { font-size: 2em; }
+            
             #player-compact {
                 top: auto;
                 bottom: 10px;
@@ -378,6 +348,18 @@
             #player-compact button {
                 padding: 6px 10px;
                 font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 20px; }
+            .spotify-section li {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .spotify-section li img {
+                margin-bottom: 10px;
+                margin-right: 0;
             }
         }
     </style>
@@ -441,42 +423,30 @@
     <div class="social-section">
         <h2>🔗 Mes Réseaux Sociaux</h2>
         <div class="social-links">
-            <a href="https://twitter.com/Fiaskerss" target="_blank" class="social-btn">
-                𝕏 Twitter : Fiaskerss
-            </a>
-            <a href="https://instagram.com/__m1nt___" target="_blank" class="social-btn">
-                📷 Instagram : __m1nt___
-            </a>
-            <a href="https://tiktok.com/@Fiaskerss" target="_blank" class="social-btn">
-                🎵 TikTok : Fiaskerss
-            </a>
-            <a href="https://discord.com/users/_m1nt_." target="_blank" class="social-btn">
-                💬 Discord : _m1nt_.
-            </a>
+            <a href="https://twitter.com/Fiaskerss" target="_blank" class="social-btn">𝕏 Twitter : Fiaskerss</a>
+            <a href="https://instagram.com/__m1nt___" target="_blank" class="social-btn">📷 Instagram : __m1nt___</a>
+            <a href="https://tiktok.com/@Fiaskerss" target="_blank" class="social-btn">🎵 TikTok : Fiaskerss</a>
+            <a href="https://discord.com/users/_m1nt_." target="_blank" class="social-btn">💬 Discord : _m1nt_.</a>
         </div>
     </div>
 
     <audio id="background-audio" style="display: none;" preload="auto"></audio>
-</body>
-</html>
-
-    <audio id="background-audio" style="display: none;" preload="auto"></audio>
 
     <div id="player-compact">
-        <div style="color: white; text-align: center; margin-bottom: 4px; font-weight: bold;">
+        <div>
             <span id="current-song">♪ Playlist</span>
         </div>
         
-        <div style="display: flex; gap: 3px; align-items: center; justify-content: center; margin-bottom: 4px; flex-wrap: wrap;">
-            <button id="prev-button" style="background: rgba(255,255,255,0.9); color: #ff9aa2; border: none; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-weight: bold; min-width: 28px; font-size: 0.9em;">⏮</button>
-            <button id="play-pause-button" style="background: rgba(255,255,255,0.9); color: #ff9aa2; border: none; border-radius: 4px; padding: 3px 8px; cursor: pointer; font-weight: bold; min-width: 32px; font-size: 0.9em;">▶</button>
-            <button id="next-button" style="background: rgba(255,255,255,0.9); color: #ff9aa2; border: none; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-weight: bold; min-width: 28px; font-size: 0.9em;">⏭</button>
+        <div>
+            <button id="prev-button">⏮</button>
+            <button id="play-pause-button">▶</button>
+            <button id="next-button">⏭</button>
         </div>
         
-        <div style="display: flex; gap: 2px; align-items: center; font-size: 0.75em;">
-            <span style="color: white;">🔊</span>
-            <input id="volume-slider" type="range" min="0" max="100" value="90" style="flex: 1; max-width: 80px;">
-            <span id="volume-value" style="color: white; min-width: 18px;">90%</span>
+        <div>
+            <span>🔊</span>
+            <input id="volume-slider" type="range" min="0" max="100" value="90">
+            <span id="volume-value">90%</span>
         </div>
     </div>
 
@@ -499,8 +469,6 @@
         let currentTrackIndex = 0
         let isPlaying = false
 
-        window.currentTrackIndex = currentTrackIndex
-
         currentSongDisplay.textContent = '🔄 Chargement playlist...'
 
         async function loadPlaylist() {
@@ -511,7 +479,6 @@
                     .order('position', { ascending: true })
 
                 if (error) throw error
-                
                 tracks = data || []
                 console.log('✅ Playlist chargée:', tracks.length, 'morceaux')
 
@@ -519,7 +486,6 @@
                     currentSongDisplay.textContent = '❌ Aucune musique'
                     return
                 }
-
                 await setTrack(0)
             } catch (error) {
                 console.error('❌ Erreur Supabase:', error.message)
@@ -529,9 +495,7 @@
 
         async function getPublicUrl(path) {
             try {
-                const { data } = supabase.storage
-                    .from('music')
-                    .getPublicUrl(path)
+                const { data } = supabase.storage.from('music').getPublicUrl(path)
                 return data.publicUrl
             } catch (error) {
                 console.error('❌ Erreur URL:', error)
@@ -542,8 +506,6 @@
         async function setTrack(index) {
             try {
                 currentTrackIndex = Math.abs(index) % tracks.length
-                window.currentTrackIndex = currentTrackIndex
-
                 const track = tracks[currentTrackIndex]
                 const url = await getPublicUrl(track.storage_path)
 
@@ -555,14 +517,7 @@
 
                 audio.src = url
                 updateSongDisplay()
-                audio.dispatchEvent(new Event('trackchange'))
-
-                if (isPlaying) {
-                    audio.play().catch(e => {
-                        console.error('❌ Erreur lecture:', e)
-                        isPlaying = false
-                    })
-                }
+                if (isPlaying) await audio.play().catch(e => console.error('❌ Erreur lecture:', e))
             } catch (error) {
                 console.error('❌ setTrack erreur:', error)
             }
@@ -576,8 +531,6 @@
         }
 
         audio.volume = 0.9
-        audio.loop = false
-
         volumeSlider.addEventListener('input', (e) => {
             audio.volume = e.target.value / 100
             volumeValue.textContent = e.target.value + '%'
@@ -587,14 +540,11 @@
             if (!tracks.length) return
             isPlaying = !isPlaying
             if (isPlaying) {
-                try {
-                    playPauseButton.textContent = '⏸'
-                    await audio.play()
-                } catch (e) {
-                    console.error('❌ Erreur lecture:', e)
+                playPauseButton.textContent = '⏸'
+                await audio.play().catch(e => {
                     isPlaying = false
                     playPauseButton.textContent = '▶'
-                }
+                })
             } else {
                 audio.pause()
                 playPauseButton.textContent = '▶'
@@ -604,7 +554,6 @@
 
         nextButton.addEventListener('click', () => tracks.length && setTrack(currentTrackIndex + 1))
         prevButton.addEventListener('click', () => tracks.length && setTrack(currentTrackIndex - 1))
-
         audio.addEventListener('ended', () => tracks.length && setTrack(currentTrackIndex + 1))
 
         loadPlaylist()
