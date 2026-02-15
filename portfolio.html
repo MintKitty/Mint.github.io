@@ -12,7 +12,7 @@
     }
 
     body {
-      font-family: 'Segoe UI', -apple-system, sans-serif;
+      font-family: 'Segoe UI', -apple-system, Blink;
       background-color: #fdf8f0;
       background-image:
         repeating-radial-gradient(circle at 3px 3px, #f0e8d8 1px, transparent 1px),
@@ -59,7 +59,7 @@
     header::before {
       content: '🐾 🐾 🐾';
       position: absolute;
-      top: -15px; left: 50%;
+      top: 5px; left: 50%;
       transform: translateX(-50%);
       font-size: 28px;
       opacity: 0.7;
@@ -523,6 +523,11 @@
       .date-added { font-size: 11px; padding: 5px 12px; }
     }
   </style>
+
+  <script>
+        // Désactiver Dark Reader automatiquement
+        document.documentElement.style.colorScheme = 'light';
+    </script>
 </head>
 <body>
   <header>
