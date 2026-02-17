@@ -15,6 +15,29 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        .visitor-counter {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #ff9aa2, #ffb6c1);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            box-shadow: 0 8px 32px rgba(255, 182, 193, 0.6);
+            z-index: 998;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .visitor-counter span {
+            font-size: 1.2em;
+        }
         
         body {
             font-family: 'Segoe UI', -apple-system, Blink;
@@ -357,6 +380,42 @@
                 margin-right: 0;
             }
         }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .faq-item {
+            background: rgba(255, 182, 193, 0.15);
+            border-left: 4px solid #ff9aa2;
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .faq-item:hover {
+            background: rgba(255, 182, 193, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.2);
+        }
+
+        .faq-item h3 {
+            color: #ff9aa2;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .faq-item p {
+            color: #4a3f2e;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
     </style>
     
     <script>
@@ -365,6 +424,14 @@
     </script>
 </head>
 <body>
+    <div class="visitor-counter">
+        <span>👁️</span>
+        <div>
+            <div id="visitor-count">0</div>
+            <div style="font-size: 0.7em; opacity: 0.9;">visiteurs</div>
+        </div>
+    </div>
+
     <header>
         <h1>✨ Bienvenue! :p ✨</h1>
     </header>
@@ -420,6 +487,42 @@
         <a href="portfolio.html" class="btn-portfolio">📁 Voir mon Portfolio</a>
     </div>
 
+    <div class="container">
+        <h2 style="color: #ff9aa2; font-size: 1.8em; margin-bottom: 25px; text-align: center;">❓ FAQ - C'est quoi un Furry?</h2>
+        
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h3>qu'est-ce qu'un furry?</h3>
+                <p>Les furries sont des personnes passionnées par les animaux anthropomorphes (animaux avec des caractéristiques humaines). C'est une communauté mondiale basée sur l'intérêt commun pour l'art, la création de personnages et la socialisation. Beaucoup de furries créent des "fursonas" - des versions animales idealisées d'eux-mêmes!</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>C'est quoi une Fursona?</h3>
+                <p>Une fursona est un personnage anthropomorphe créé par un furry pour se représenter dans la communauté. C'est généralement un mélange d'animaux différents ou une seule espèce, avec sa propre personnalité et histoire. Certains furries créent des costumes (fursuit) pour incarner leur fursona en personne!</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Pourquoi les costumes furry?</h3>
+                <p>Les fursuits sont une expression créative et personnelle. Pour certains, c'est une façon libératrice de vivre pleinement leur fursona. Pour d'autres, c'est simplement un hobby amusant. Il n'y a pas une seule "bonne" raison - la communauté accepte tous les niveaux d'engagement!</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Y a-t-il des furries "occasionnels"?</h3>
+                <p>Absolument! La communauté est très diverse. Certains furries sont très impliqués (conventions, costumes, art), tandis que d'autres apprécient simplement la communauté et l'art en ligne. Il n'y a pas de "bonne" façon d'être furry - chacun le vit à sa manière!</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Quels animaux sont populaires?</h3>
+                <p>La communauté est extrêmement diverse! Les espèces les plus populaires incluent les loups, les renards, les dragons, les chats, les huskies et les lapins. Mais on trouve aussi des créatures mythiques, des hybrides et même des animaux moins courants. C'est ce qui rend la communauté si riche!</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Est-ce un truc sexuel?</h3>
+                <p>C'est différent pour chaque personne. Pour beaucoup de furries, c'est simplement une passion créative, sociale et artistique. Pour d'autres, il y a une composante romantique ou sexuelle. La beauté de la communauté, c'est qu'elle accepte tout le monde et toutes les orientations - il n'y a pas de jugement!</p>
+            </div>
+        </div>
+    </div>
+
     <div class="social-section">
         <h2>🔗 Mes Réseaux Sociaux</h2>
         <div class="social-links">
@@ -452,10 +555,49 @@
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
         const supabaseUrl = 'https://godyjjvpxujmulrxoijz.supabase.co'
         const supabaseKey = 'sb_publishable_WKP5m-PSGLKUB6QH3h67-Q_qOiJxACe'
         const supabase = createClient(supabaseUrl, supabaseKey)
+
+        async function initVisitorCounter() {
+            try {
+                // Récupère le count actuel
+                const { data, error } = await supabase
+                    .from('visitor_counter')
+                    .select('count')
+                    .single()
+
+                if (error && error.code !== 'PGRST116') throw error
+
+                let currentCount = data?.count || 0
+                currentCount++
+
+                // Met à jour la base de données
+                await supabase
+                    .from('visitor_counter')
+                    .upsert({ id: 1, count: currentCount }, { onConflict: 'id' })
+
+                // Affiche le count
+                document.getElementById('visitor-count').textContent = currentCount
+
+                // Écoute les changements en temps réel
+                supabase
+                    .channel('visitor_updates')
+                    .on('postgres_changes', 
+                        { event: 'UPDATE', schema: 'public', table: 'visitor_counter' },
+                        (payload) => {
+                            document.getElementById('visitor-count').textContent = payload.new.count
+                        }
+                    )
+                    .subscribe()
+
+            } catch (error) {
+                console.error('❌ Erreur compteur:', error)
+                document.getElementById('visitor-count').textContent = '❌'
+            }
+        }
+
+        initVisitorCounter()
 
         const playPauseButton = document.getElementById('play-pause-button')
         const nextButton = document.getElementById('next-button')
