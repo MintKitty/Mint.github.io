@@ -600,7 +600,7 @@
         async function loadPlaylist() {
             try {
                 const { data, error } = await supabase
-                    .from('tracks')
+                    .from('track')
                     .select('title, artist, storage_path')
                     .order('position', { ascending: true })
 
