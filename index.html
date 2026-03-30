@@ -630,16 +630,21 @@
         }
 
         async function setTrack(index) {
-            try {
-                currentTrackIndex = Math.abs(index) % tracks.length
-                const track = tracks[currentTrackIndex]
-                const url = await getPublicUrl(track.storage_path)
-
-                if (!url) {
-                    console.error('❌ URL manquante pour:', track.title)
-                    currentSongDisplay.textContent = `❌ Fichier manquant`
-                    return
-                }
+    if (index < 0) index = tracks.length - 1
+    if (index >= tracks.length) index = 0
+    currentTrackIndex = index
+    
+    const track = tracks[currentTrackIndex]
+    
+    // CETTE LIGNE EST LA PLUS IMPORTANTE :
+    // Elle crée le lien vers le fichier que tu as uploadé à l'étape 1
+    audio.src = `${supabaseUrl}/storage/v1/object/public/tracks/${track.storage_path}`
+    
+    updateSongDisplay()
+    if (isPlaying) {
+        audio.play().catch(console.error)
+    }
+}
 
                 audio.src = url
                 updateSongDisplay()
