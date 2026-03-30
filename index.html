@@ -519,46 +519,69 @@
 
     <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-    // On définit les accès
+    
+    // REMPLACE CES DEUX LIGNES PAR TES NOUVELLES INFOS :
     const supabaseUrl = 'https://xkncnxeortxihznrjsxk.supabase.co'
-    const supabaseKey = 'sb_publishable_JtnSf1uEtFWEEEDZ-zoK5Q_jZODYfU5'
-
-    // On initialise le client
+    const supabaseKey = 'sb_publishable_JtnSf1uEtFWEEEDZ-zoK5Q_jZODYfU5' 
+    
     const supabase = createClient(supabaseUrl, supabaseKey)
+    // ... reste du code
 
-    const counterElement = document.getElementById('visitor-count')
+        async function initVisitorCounter() {
+            try {
+                console.log('🔄 Initialisation compteur...')
+                
+                // Récupère le count actuel
+                const { data, error } = await supabase
+                    .from('visitor_counter')
+                    .select('count')
+                    .eq('id', 1)
+                    .single()
 
-    async function updateCounter() {
-        try {
-            // 1. On récupère la valeur actuelle
-            const { data, error } = await supabase
-                .from('visitor_counter')
-                .select('count')
-                .eq('id', 1)
-                .single()
+                if (error) {
+                    console.error('❌ Erreur SELECT:', error)
+                    throw error
+                }
 
-            if (error) throw error
+                let currentCount = (data?.count || 0) + 1
+                console.log('📊 Count actuel:', currentCount)
 
-            const newCount = (data.count || 0) + 1
+                // Met à jour la base de données
+                const { error: updateError } = await supabase
+                    .from('visitor_counter')
+                    .update({ count: currentCount })
+                    .eq('id', 1)
 
-            // 2. On met à jour la base de données
-            await supabase
-                .from('visitor_counter')
-                .update({ count: newCount })
-                .eq('id', 1)
+                if (updateError) {
+                    console.error('❌ Erreur UPDATE:', updateError)
+                    throw updateError
+                }
 
-            // 3. On affiche le nouveau chiffre
-            if (counterElement) counterElement.textContent = newCount
-        } catch (err) {
-            console.error('Erreur compteur:', err)
-            if (counterElement) counterElement.textContent = '?'
+                // Affiche le count
+                document.getElementById('visitor-count').textContent = currentCount
+                console.log('✅ Compteur affiché:', currentCount)
+
+                // Écoute les changements en temps réel
+                supabase
+                    .channel('visitor_counter_channel')
+                    .on('postgres_changes', 
+                        { event: 'UPDATE', schema: 'public', table: 'visitor_counter', filter: 'id=eq.1' },
+                        (payload) => {
+                            console.log('🔄 Mise à jour reçue:', payload.new.count)
+                            document.getElementById('visitor-count').textContent = payload.new.count
+                        }
+                    )
+                    .subscribe((status) => {
+                        console.log('📡 Realtime status:', status)
+                    })
+
+            } catch (error) {
+                console.error('❌ Erreur complète:', error)
+                document.getElementById('visitor-count').textContent = '❌'
+            }
         }
-    }
 
-    updateCounter()
-        
-</script>
+        initVisitorCounter()
 
         const playPauseButton = document.getElementById('play-pause-button')
         const nextButton = document.getElementById('next-button')
