@@ -621,7 +621,8 @@
 
         async function getPublicUrl(path) {
             try {
-                const { data } = supabase.storage.from('music').getPublicUrl(path)
+        // Cette ligne crée le lien vers ton dossier "tracks" sur Supabase
+                const { data } = supabase.storage.from('track').getPublicUrl(path)
                 return data.publicUrl
             } catch (error) {
                 console.error('❌ Erreur URL:', error)
