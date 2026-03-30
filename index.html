@@ -487,42 +487,6 @@
         <a href="portfolio.html" class="btn-portfolio">📁 Voir mon Portfolio</a>
     </div>
 
-    <div class="container">
-        <h2 style="color: #ff9aa2; font-size: 1.8em; margin-bottom: 25px; text-align: center;">❓ FAQ - C'est quoi un Furry?</h2>
-        
-        <div class="faq-grid">
-            <div class="faq-item">
-                <h3>qu'est-ce qu'un furry?</h3>
-                <p>Les furries sont des personnes passionnées par les animaux anthropomorphes (animaux avec des caractéristiques humaines). C'est une communauté mondiale basée sur l'intérêt commun pour l'art, la création de personnages et la socialisation. Beaucoup de furries créent des "fursonas" - des versions animales idealisées d'eux-mêmes!</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>C'est quoi une Fursona?</h3>
-                <p>Une fursona est un personnage anthropomorphe créé par un furry pour se représenter dans la communauté. C'est généralement un mélange d'animaux différents ou une seule espèce, avec sa propre personnalité et histoire. Certains furries créent des costumes (fursuit) pour incarner leur fursona en personne!</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>Pourquoi les costumes furry?</h3>
-                <p>Les fursuits sont une expression créative et personnelle. Pour certains, c'est une façon libératrice de vivre pleinement leur fursona. Pour d'autres, c'est simplement un hobby amusant. Il n'y a pas une seule "bonne" raison - la communauté accepte tous les niveaux d'engagement!</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>Y a-t-il des furries "occasionnels"?</h3>
-                <p>Absolument! La communauté est très diverse. Certains furries sont très impliqués (conventions, costumes, art), tandis que d'autres apprécient simplement la communauté et l'art en ligne. Il n'y a pas de "bonne" façon d'être furry - chacun le vit à sa manière!</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>Quels animaux sont populaires?</h3>
-                <p>La communauté est extrêmement diverse! Les espèces les plus populaires incluent les loups, les renards, les dragons, les chats, les huskies et les lapins. Mais on trouve aussi des créatures mythiques, des hybrides et même des animaux moins courants. C'est ce qui rend la communauté si riche!</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>Est-ce un truc sexuel?</h3>
-                <p>C'est différent pour chaque personne. Pour beaucoup de furries, c'est simplement une passion créative, sociale et artistique. Pour d'autres, il y a une composante romantique ou sexuelle. La beauté de la communauté, c'est qu'elle accepte tout le monde et toutes les orientations - il n'y a pas de jugement!</p>
-            </div>
-        </div>
-    </div>
-
     <div class="social-section">
         <h2>🔗 Mes Réseaux Sociaux</h2>
         <div class="social-links">
@@ -554,45 +518,65 @@
     </div>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-        const supabaseUrl = 'https://godyjjvpxujmulrxoijz.supabase.co'
-        const supabaseKey = 'sb_publishable_WKP5m-PSGLKUB6QH3h67-Q_qOiJxACe'
-        const supabase = createClient(supabaseUrl, supabaseKey)
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+    
+    // REMPLACE CES DEUX LIGNES PAR TES NOUVELLES INFOS :
+    const supabaseUrl = 'https://xkncnxeortxihznrjsxk.supabase.co'
+    const supabaseKey = 'sb_publishable_JtnSf1uEtFWEEEDZ-zoK5Q_jZODYfU5' 
+    
+    const supabase = createClient(supabaseUrl, supabaseKey)
+    // ... reste du code
 
         async function initVisitorCounter() {
             try {
+                console.log('🔄 Initialisation compteur...')
+                
                 // Récupère le count actuel
                 const { data, error } = await supabase
                     .from('visitor_counter')
                     .select('count')
+                    .eq('id', 1)
                     .single()
 
-                if (error && error.code !== 'PGRST116') throw error
+                if (error) {
+                    console.error('❌ Erreur SELECT:', error)
+                    throw error
+                }
 
-                let currentCount = data?.count || 0
-                currentCount++
+                let currentCount = (data?.count || 0) + 1
+                console.log('📊 Count actuel:', currentCount)
 
                 // Met à jour la base de données
-                await supabase
+                const { error: updateError } = await supabase
                     .from('visitor_counter')
-                    .upsert({ id: 1, count: currentCount }, { onConflict: 'id' })
+                    .update({ count: currentCount })
+                    .eq('id', 1)
+
+                if (updateError) {
+                    console.error('❌ Erreur UPDATE:', updateError)
+                    throw updateError
+                }
 
                 // Affiche le count
                 document.getElementById('visitor-count').textContent = currentCount
+                console.log('✅ Compteur affiché:', currentCount)
 
                 // Écoute les changements en temps réel
                 supabase
-                    .channel('visitor_updates')
+                    .channel('visitor_counter_channel')
                     .on('postgres_changes', 
-                        { event: 'UPDATE', schema: 'public', table: 'visitor_counter' },
+                        { event: 'UPDATE', schema: 'public', table: 'visitor_counter', filter: 'id=eq.1' },
                         (payload) => {
+                            console.log('🔄 Mise à jour reçue:', payload.new.count)
                             document.getElementById('visitor-count').textContent = payload.new.count
                         }
                     )
-                    .subscribe()
+                    .subscribe((status) => {
+                        console.log('📡 Realtime status:', status)
+                    })
 
             } catch (error) {
-                console.error('❌ Erreur compteur:', error)
+                console.error('❌ Erreur complète:', error)
                 document.getElementById('visitor-count').textContent = '❌'
             }
         }
